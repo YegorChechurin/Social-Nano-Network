@@ -2,6 +2,8 @@
     require_once '../models/db_con.php';
     require_once '../models/user_class.php';
     require_once '../models/request_class.php';
+
+    echo 'What a nice test!';
     
     $request = new Request();
     $user_id = $request->uri[2];
