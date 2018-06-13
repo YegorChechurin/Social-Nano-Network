@@ -2,8 +2,6 @@
     require_once '../models/db_con.php';
     require_once '../models/user_class.php';
     require_once '../models/request_class.php';
-
-    echo 'What a nice test!';
     
     $request = new Request();
     $user_id = $request->uri[2];
@@ -27,10 +25,11 @@
     <title>Chats</title>
     <?php require '../views/setup.php' ?>
     <script type="text/javascript" src="http://localhost/SNN/js/listeners.js"></script>
-    <!--<script type="text/javascript" src="http://localhost/SNN/js/chat_room/chat_room.js"></script>-->
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/events_map.js"></script>
-    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/config.js"></script>
-    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/Handlers.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesListener.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsBarHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/Broker.js"></script>
 	<link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/chat_room/chat_room_style.css">
 </head>
 <body>
@@ -65,18 +64,6 @@
 	var user_name = <?=json_encode($user_name)?>;
 	var last_rec_mes_id = <?=$last_rec_mes_id?>;
     var chats;
-
-    /*$("#send_button").click(
-        function(){
-            send_message();
-        }
-    );
-
-    $(document).ready(
-        form_chats_bar()
-    );*/
-
-    //setTimeout(incoming_messages_listener,3000);
 
     $("#send_button").click(
         function(){

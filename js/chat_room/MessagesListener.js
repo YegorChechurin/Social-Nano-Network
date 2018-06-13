@@ -46,7 +46,7 @@ function MessagesListener(){
 
 }
 
-function GlobalHandler(){
+/*function GlobalHandler(){
 
 	this.test = function(){
 		alert(events_map[0].event);
@@ -59,15 +59,6 @@ function GlobalHandler(){
     this.register_event = function(event){
     	this.events.push(event);
     }
-
-	/*this.handle = function(event,data){
-		events_map.forEach(function(item){
-			if (event==item.event) {
-				var h = eval('new '+item.handler);
-				eval("h."+item.method);
-			}
-		});
-	}*/
 
 	this.handle = function(event,data){
 		events_map.forEach(function(item){
@@ -82,14 +73,7 @@ function GlobalHandler(){
 		});
 	}
 
-}
-
-/*events_map = 
-[{
-	"event":"incoming_messages",
-	"handler":"MessagesHandler()",
-	"method":"handle_incoming_messages(data)"
-}]*/
+}*/
 
 /*function eat(food1, food2)
 {
