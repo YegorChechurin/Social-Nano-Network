@@ -5,24 +5,20 @@
 			  }
 .active_chat_header {
 	          position: relative;
-			  border-top: 1px solid black; 
+			  border-bottom: 1px solid black;
 			  width: 100%; 
-			  height: 50px;
+			  min-height: 55px;
 			  overflow: hidden; 
-	          padding-bottom: 10px; 
-			  padding-top: 5px; 
               cursor: pointer;
 			  color: pink;
 			  background-color: red
 		     }
 .chat_header {
 	          position: relative;
-			  border-top: 1px solid black; 
+			  border-bottom: 1px solid black;
 			  width: 100%; 
-			  height: 50px;
+			  min-height: 55px;
 			  overflow: hidden; 
-	          padding-bottom: 10px; 
-			  padding-top: 5px; 
               cursor: pointer;
 			  color: pink;
 		     }
