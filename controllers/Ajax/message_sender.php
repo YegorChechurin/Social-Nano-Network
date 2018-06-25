@@ -1,9 +1,11 @@
 <?php 
 
-    require_once '../models/db_con.php';
-    require_once '../models/user_class.php';
-    require_once '../models/request_class.php';
-    require_once '../models/message_class.php';
+    use Skeleton\RequestHandling\Request;
+    use Models\Message;
+    
+    require_once '../skeleton/db_con.php';
+    require_once '../skeleton/Request_class.php';
+    require_once '../models/Message_class.php';
 
     $request = new Request();
     $mes_info = array();
@@ -13,4 +15,5 @@
     $mes_info['recipient_name'] = $request->POST['partner_name'];
     $mes_info['message'] = $request->POST['message'];
     Message::postMessage($conn,$mes_info);
+    
 ?>

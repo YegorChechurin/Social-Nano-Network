@@ -1,9 +1,11 @@
 <?php
 
+    namespace Models;
+
     class Chat {
 
     	public static function createChat($conn,$mes_info) {
-    	   /* Assinging all the necessary values */	
+    	   /* Assining all the necessary values */	
 		       $conn = $conn;
     	     $sender_id = $mes_info['sender_id'];
     	     $sender_name = $mes_info['sender_name'];
@@ -53,7 +55,7 @@
           $conn = $conn;
           $query = "SELECT * FROM messages WHERE (sender_id=$id_1 AND recipient_id=$id_2) OR (sender_id=$id_2 AND recipient_id=$id_1)";
           $result = $conn->query($query);
-	   	    $messages = $result->fetchAll(PDO::FETCH_ASSOC);
+	   	    $messages = $result->fetchAll(\PDO::FETCH_ASSOC);
 	   	    return $messages;
     	}
 

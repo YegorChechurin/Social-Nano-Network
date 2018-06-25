@@ -27,7 +27,6 @@
 
     $controller = new ChatRoom();
     $data = $controller->get_view_data($conn);
-    var_dump($data);
     $controller->load_view($view_map,$data);
 
 ?>

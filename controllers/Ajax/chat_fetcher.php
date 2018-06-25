@@ -1,8 +1,11 @@
 <?php 
     
-    require_once '../models/db_con.php';
-    require_once '../models/request_class.php';
-    require_once '../models/chat_class.php';
+	use Skeleton\RequestHandling\Request;
+    use Models\Chat;
+
+    require_once '../skeleton/db_con.php';
+    require_once '../skeleton/Request_class.php';
+    require_once '../models/Chat_class.php';
     
     $request = new Request();
     $user_id = $request->uri[2]; //$_REQUEST['user_id'];

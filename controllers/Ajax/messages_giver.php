@@ -1,5 +1,12 @@
 <?php 
+
+    use Skeleton\RequestHandling\Request;
+    use Models\User;
     
+    require_once '../skeleton/db_con.php';
+    require_once '../skeleton/Request_class.php';
+    require_once '../models/User_class.php';
+
     function long_polling(User $user, $message_id, $timestamp) {
         $start = $timestamp;
         $finish = $start + 20;
@@ -17,10 +24,6 @@
             }
         }
     }
-
-    require_once '../models/db_con.php';
-    require_once '../models/user_class.php';
-    require_once '../models/request_class.php';
     
     $request = new Request();
     $user_id = $request->uri[2]; 
