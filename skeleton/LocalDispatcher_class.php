@@ -1,5 +1,9 @@
 <?php
-    require_once '../models/Router_interface.php';
+
+    namespace Skeleton\RequestHandling;
+    use Skeleton\RequestHandling\iRouter;
+
+    require_once 'Router_interface.php';
 
     class LocalDispatcher implements iRouter {
 

@@ -1,4 +1,5 @@
 <?php 
+
     /* Connecting to our database */
 	       try{
 		        $dsn = "mysql:dbname=snn;host=localhost";

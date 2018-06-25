@@ -1,5 +1,7 @@
 <?php
     
+    namespace Skeleton\RequestHandling;
+    
     class Request {
     	public $method;
     	public $raw_uri;

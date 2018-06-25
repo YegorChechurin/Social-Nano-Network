@@ -1,5 +1,8 @@
 <?php
-   class User {
+
+	namespace Models;
+
+    class User {
 	   
 	   protected $conn;
 	   protected $id;	   
@@ -22,7 +25,7 @@
 	   public function fetchName() {
 	   	   $query = "SELECT username FROM users WHERE user_id=$this->id";
 		   $action = $this->conn->query($query);
-		   $result = $action->fetch(PDO::FETCH_ASSOC);
+		   $result = $action->fetch(\PDO::FETCH_ASSOC);
 		   $this->name = $result['username'];
 		   return $this->name;
 	   }
@@ -34,7 +37,7 @@
 	   public function get_fr_IDs() {
            $stat = "SELECT fr2_id FROM friends WHERE fr1_id=$this->id";
            $impl = $this->conn->query($stat);
-           $res = $impl->fetchAll(PDO::FETCH_ASSOC);
+           $res = $impl->fetchAll(\PDO::FETCH_ASSOC);
            if ($res) {
            	 foreach ($res as $key => $value) {
            	 	$fr_IDs[] = $value['fr2_id'];
@@ -42,7 +45,7 @@
            }
            $stat = "SELECT fr1_id FROM friends WHERE fr2_id=$this->id";
            $impl = $this->conn->query($stat);
-           $res = $impl->fetchAll(PDO::FETCH_ASSOC);
+           $res = $impl->fetchAll(\PDO::FETCH_ASSOC);
            if ($res) {
            	 foreach ($res as $key => $value) {
            	 	$fr_IDs[] = $value['fr1_id'];
@@ -61,7 +64,7 @@
            	 foreach ($fr_IDs as $key => $value) {
            		$stat = "SELECT username FROM users WHERE user_id=$value";
            		$impl = $this->conn->query($stat);
-                $res = $impl->fetch(PDO::FETCH_ASSOC);
+                $res = $impl->fetch(\PDO::FETCH_ASSOC);
                 $fr_info[] = array('id'=>$value,'name'=>$res['username']);
            	 }
            	return $fr_info;
@@ -73,7 +76,7 @@
 	   public function get_last_friendship_id() {
 		   $query = "SELECT MAX(friendship_id) FROM friends WHERE fr1_id = $this->id OR fr2_id = $this->id";
 		   $result = $this->conn->query($query);
-		   $maximum = $result->fetch(PDO::FETCH_ASSOC);
+		   $maximum = $result->fetch(\PDO::FETCH_ASSOC);
 		   $last_friendship_id = $maximum['MAX(friendship_id)'];
 		   if ($last_friendship_id) {
 		   	  return $last_friendship_id;
@@ -86,7 +89,7 @@
 	   public function fetch_chats() {
 	   	   $query = "SELECT * FROM chats WHERE participant1_id=$this->id OR participant2_id=$this->id ORDER BY	last_mes_ts DESC";
 	   	   $result = $this->conn->query($query);
-	   	   $chats_raw = $result->fetchAll(PDO::FETCH_ASSOC);
+	   	   $chats_raw = $result->fetchAll(\PDO::FETCH_ASSOC);
 	   	   if ($chats_raw) {
 	   	   	  foreach ($chats_raw as $key => $value) {
 	   	   	  	$chat['partner_id'] = $value['chat_key'] - $this->id;
@@ -110,7 +113,7 @@
 	   public function getLast() {
 		   $query = "SELECT MAX(message_id) FROM messages WHERE recipient_id = $this->id";
 		   $result = $this->conn->query($query);
-		   $maximum = $result->fetch(PDO::FETCH_ASSOC);
+		   $maximum = $result->fetch(\PDO::FETCH_ASSOC);
 		   $mes_id = $maximum['MAX(message_id)'];
 		   if ($maximum) {
 		   	  $mes_id = $maximum['MAX(message_id)'];
@@ -124,9 +127,9 @@
 	       $test = $message_id;
 	       $query = "SELECT * FROM messages WHERE recipient_id = $this->id AND message_id > $test ORDER BY message_id";
 	       $result = $this->conn->query($query);
-		   $messages = $result->fetchAll(PDO::FETCH_ASSOC);	
+		   $messages = $result->fetchAll(\PDO::FETCH_ASSOC);	
 		   return $messages;
 	   }
 	   
-   }
+    }
 ?>

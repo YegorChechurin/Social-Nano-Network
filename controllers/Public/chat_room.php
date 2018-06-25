@@ -1,4 +1,7 @@
 <?php 
+
+    use Controllers\Pub\ChatRoom;
+
     require_once 'view_map.php';
     //require_once 'PublicController_class.php';
     require_once 'ChatRoom_class.php';
@@ -22,10 +25,9 @@
 
     require '../views/chat_room_view.php';*/
 
-    use Controllers\Pub\ChatRoom;
-
     $controller = new ChatRoom();
     $data = $controller->get_view_data($conn);
+    var_dump($data);
     $controller->load_view($view_map,$data);
 
 ?>

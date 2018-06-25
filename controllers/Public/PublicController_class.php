@@ -8,6 +8,7 @@
 
         public function load_view($view_map,$data) {
             $controller = get_class($this);
+            echo $controller;
             foreach ($view_map as $map) {
                 if ($map['controller']==$controller) {
                     require $map['view'];
