@@ -12,21 +12,25 @@
 	<link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/chat_room/chat_room_style.css">
 </head>
 <body>
-<div class="container-fluid" style="padding-top:5%;">
-	<div class="row">
+<div class="container-fluid" style="padding-top:5%; height: 100vh;">
+    <div class="row" style="height: 10%;">
+        <div>Navbar</div>
+    </div>
+	<div class="row" style="height: 60%;">
         <div class="col-sm-3">
             <div id="chats_wrapper">
             </div>
 	   </div>
-		<div class="col-sm-6 d-none d-sm-block" id="mes" style="height: 370px;">      
+		<div class="col-sm-6 d-none d-sm-block" id="mes" >      
         </div>
-		<div class="col-sm-3 d-none d-sm-block" id="sidebar">
+		<!--<div class="col-sm-3 d-none d-sm-block" id="sidebar">-->
+        <div class="col-sm-3" id="sidebar">
             <div style="text-align: center; padding-top:5%">
 		       If you would like to chat to someone with whom you do not have an active chat yet, then please go to your profile page by clicking your username in the left uppermost corner of the page, and then select that person from your friend list.
 		    </div>
 	    </div>
     </div>
-	  <div class="row justify-content-center">
+	  <div class="row justify-content-center" style="height: 30%;">
 		<div class="col-sm-6 d-none d-sm-block">
 				<textarea class="form-control" rows="4" id="text" name="message" placeholder="Type your message here:"></textarea>
                 <button type="button" id="send_button" class="btn btn-info">Send</button>

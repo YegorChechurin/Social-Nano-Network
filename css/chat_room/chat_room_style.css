@@ -1,6 +1,6 @@
 #chats_wrapper {
 			    overflow: auto; 
-			    height: 55%;
+			    /*height: 55%;*/
 			    /*margin-top: 15%;*/
 			  }
 .active_chat_header {
@@ -11,7 +11,7 @@
 			  overflow: hidden; 
               cursor: pointer;
 			  color: pink;
-			  background-color: red
+			  background-color: red;
 		     }
 .chat_header {
 	          position: relative;
@@ -40,13 +40,19 @@
 			       }
 #mes {
 	  overflow: auto;
-	  height: 70%;
+	  /*height: 70%;*/
 	  background-color: #ccffcc
     }
-#sidebar {
+/*#sidebar {
 	      height: 70%;
 	      background-color: #ffffe6
+        }*/
+@media only screen and (min-width: 600px) {
+	#sidebar {
+	      /*height: 70%;*/
+	      background-color: #ffffe6
         }
+}
 .message_inlet {
 	            display: inline-block;
 	            word-wrap: break-word;
