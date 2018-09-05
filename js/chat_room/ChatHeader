@@ -1,0 +1,8 @@
+class ChatHeader {
+    constructor(id) {
+        this.id = 'c'+id;
+        $("#chats_wrapper").append('<div id="'+id+'"></div>');
+        $("#"+id).html('<b>'+chat.partner_name+'</b><br>'+
+        chat.last_mes_auth_name+': '+chat.last_mes_text);
+    }
+}
