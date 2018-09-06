@@ -12,9 +12,12 @@
 	<link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/chat_room/chat_room_style.css">
 </head>
 <body>
-<div class="container-fluid" style="padding-top:5%; height: 100vh;">
+<div class="container-fluid" style="height: 100vh;">
     <div class="row" style="height: 10%;">
-        <div>Navbar</div>
+        <!--<div><h1>Navbar</h1></div>-->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="width: 100%; border-bottom: 1px solid black;">
+            <a class="navbar-brand" href="#">Navbar</a>
+        </nav>
     </div>
 	<div class="row" style="height: 60%;">
         <div class="col-sm-3">
@@ -25,7 +28,7 @@
         </div>
 		<!--<div class="col-sm-3 d-none d-sm-block" id="sidebar">-->
         <div class="col-sm-3" id="sidebar">
-            <div style="text-align: center; padding-top:5%">
+            <div class="d-none d-sm-block" style="text-align: center; padding-top:5%">
 		       If you would like to chat to someone with whom you do not have an active chat yet, then please go to your profile page by clicking your username in the left uppermost corner of the page, and then select that person from your friend list.
 		    </div>
 	    </div>
