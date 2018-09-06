@@ -11,7 +11,10 @@ function ChatsBarHandler(){
         );
 	}
 
-    this.rearrange_chats_bar = function(messages) {}
+    this.rearrange_chats_bar = function(messages) {
+        var l = messages.length;
+        for (i = 0; i < l; i++) {}
+    }
 
 	var form_chats_bar = function(){
         if (chats) {
@@ -53,8 +56,22 @@ function ChatsBarHandler(){
                 if (status=="success") {
                     $("#mes").html('')
                     var messages = JSON.parse(data);
-                    h = new MessagesHandler();
-                    messages.forEach(h.display_message);
+                    messages.forEach(
+                        function(message) {
+                            n++;
+                            if (message.sender_id == user_id) {
+                                var content = '<div class="message_outlet" id="m'+n+'"><b>You:</b> '+message.message+'</div><br>';
+                                $("#mes").append(content);
+                            } else {
+                                var content = '<div class="message_inlet" id="m'+n+'"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
+                                $("#mes").append(content);
+                            }
+                            var last_mes_pos = document.getElementById("m"+n).offsetTop;
+                            if (last_mes_pos > mes_height) {
+                                document.getElementById("mes").scrollTop = last_mes_pos; 
+                            }
+                        }
+                    );
                 }
             }
         );

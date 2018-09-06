@@ -1,21 +1,12 @@
-/*events_map = 
-[{
-	"event":"incoming_messages",
-	"handler":"MessagesHandler()",
-	"method":"handle_incoming_messages(data)"
-},
-{
-	"event":"message_sent",
-	"handler":"MessagesHandler()",
-	"method":"handle_sent_message(data)"
-}]*/
-
 events_map = 
 [{
 	"event":"incoming_messages",
     "handling":[{
     	"handler":"MessagesHandler()",
     	"method":"handle_incoming_messages(data)"
+    },
+    {   "handler":"ChatsBarHandler()",
+    	"method":"rearrange_chats_bar(data)"
     }]
 },
 {
@@ -23,6 +14,9 @@ events_map =
     "handling":[{
     	"handler":"MessagesHandler()",
     	"method":"handle_sent_message(data)"
+    },
+    {   "handler":"ChatsBarHandler()",
+    	"method":"rearrange_chats_bar(data)"
     }]
 },
 {
