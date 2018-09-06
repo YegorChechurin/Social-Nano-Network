@@ -11,6 +11,8 @@ function ChatsBarHandler(){
         );
 	}
 
+    this.rearrange_chats_bar = function(messages) {}
+
 	var form_chats_bar = function(){
         if (chats) {
             $("#chats_wrapper").html('');
