@@ -20,10 +20,16 @@ function ChatsBarHandler(){
         if (chats) {
             $("#chats_wrapper").html('');
             chats.forEach(form_chat_header);
+            chats.forEach(convert_chat_last_mes_ts);
             ts = Date.parse(chats[0].last_mes_ts);
             Cookies.set('last_mes_ts', ts, {expires:365});
         }
 	}
+
+    var convert_chat_last_mes_ts = function(chat) {
+        var t = Date.parse(chat.last_mes_ts);
+        chat.last_mes_ts = t;
+    }
 
 	var form_chat_header = function(chat){
             var id = 'c'+chat.partner_id; 

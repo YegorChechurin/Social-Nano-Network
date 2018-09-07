@@ -6,34 +6,17 @@ function MessagesHandler() {
         this.register_last_mes_ts();
 		messages.forEach(this.display_message);
 		messages.forEach(this.register);
-		var l = messages.length;
-        for (i = 0; i < l-1; i++) {
-        	if (messages[i].sender_id==messages[i+1].sender_id) {
-        		messages.splice(i, 1); 
-        	}
-        }
+		// var l = messages.length;
+  //       for (i = 0; i < l-1; i++) {
+  //       	if (messages[i].sender_id==messages[i+1].sender_id) {
+  //       		messages.splice(i, 1); 
+  //       	}
+  //       }
 	}
 
 	this.handle_sent_message = function(message){
 		this.display_message(message);
         this.register_last_mes_ts();
-        if (chats) {
-        	// var chat = chats.find(function(element){
-        	// 	if (message.recipient_id==chat.participant1_id || message.recipient_id==chat.participant2_id) {
-        	// 		return element;
-        	// 	}
-        	// });
-        	chats.forEach(
-        		function(chat) {
-        			if (message.recipient_id==chat.participant1_id || message.recipient_id==chat.participant2_id) {
-        				chat.last_mes_auth_id = user_id;
-        				chat.last_mes_auth_name = user_name;
-        				chat.last_mes_text = message.message;
-        				chat.last_mes_ts = message.ts;
-        			}
-        		}
-        	);
-        }
 	}
 
 	this.display_message = function(message){
@@ -53,6 +36,7 @@ function MessagesHandler() {
         } else {
             alert("You received new message from "+message.sender_name);
         }
+        update_chats(message);
 	}
 
 	this.register_last_mes_ts = function(){
@@ -84,6 +68,23 @@ function MessagesHandler() {
 		} else {
 			Cookies.set('unread_chats', [chat_partner_id], {expires:365});
 		}
+	}
+
+	var update_chats = function(message) {
+		if (chats) {
+        	chats.forEach(
+        		function(chat) {
+        			if ((message.sender_id==chat.participant1_id || message.recipient_id==chat.participant2_id)||(message.recipient_id==chat.participant1_id || message.recipient_id==chat.participant2_id)) {
+        				chat.last_mes_auth_id = user_id;
+        				chat.last_mes_auth_name = user_name;
+        				chat.last_mes_text = message.message;
+        				var date = new Date();
+                        var t = date.getTime();
+        				chat.last_mes_ts = t;
+        			}
+        		}
+        	);
+        }
 	}
 
 } 
