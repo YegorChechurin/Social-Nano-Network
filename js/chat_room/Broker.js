@@ -1,6 +1,6 @@
-function GlobalHandler(){
+function Broker(){
 
-	this.handle = function(event,data){
+	this.invoke_handler = function(event,data){
 		events_map.forEach(function(item){
 			if (event==item.event) {
 				item.handling.forEach(

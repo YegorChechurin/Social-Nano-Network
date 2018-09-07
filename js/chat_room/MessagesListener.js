@@ -40,8 +40,8 @@ function MessagesListener(){
 	}
 
 	var fire_event = function(event,data){
-		var gl_h = new GlobalHandler();
-        gl_h.handle(event,data);
+		var broker = new Broker();
+        broker.invoke_handler(event,data);
 	}
 
 }

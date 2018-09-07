@@ -11,9 +11,22 @@ function ChatsBarHandler(){
         );
 	}
 
-    this.rearrange_chats_bar = function(messages) {
-        var l = messages.length;
-        for (i = 0; i < l; i++) {}
+    this.rearrange_chats_bar = function() {
+        var l = chats.length;
+        var stamp;
+        for (var i = 0; i < l; i++) {
+            for (var j = 1; j < (l-i); j++) {
+                if (chats[j-1].last_mes_ts<chats[j].last_mes_ts) {
+                    stamp = chats[j-1];
+                    chats[j-1] = chats[j];
+                    chats[j] = stamp;
+                }
+            }
+        }
+        $("#chats_wrapper").html('');
+        chats.forEach(form_chat_header);
+        ts = Date.parse(chats[0].last_mes_ts);
+        Cookies.set('last_mes_ts', ts, {expires:365});
     }
 
 	var form_chats_bar = function(){
