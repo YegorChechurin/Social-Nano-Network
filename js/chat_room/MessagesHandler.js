@@ -6,12 +6,6 @@ function MessagesHandler() {
         this.register_last_mes_ts();
 		messages.forEach(this.display_message);
 		messages.forEach(this.register);
-		// var l = messages.length;
-  //       for (i = 0; i < l-1; i++) {
-  //       	if (messages[i].sender_id==messages[i+1].sender_id) {
-  //       		messages.splice(i, 1); 
-  //       	}
-  //       }
 	}
 
 	this.handle_sent_message = function(message){
@@ -74,7 +68,7 @@ function MessagesHandler() {
 		if (chats) {
         	chats.forEach(
         		function(chat) {
-        			if ((message.sender_id==chat.participant1_id || message.recipient_id==chat.participant2_id)||(message.recipient_id==chat.participant1_id || message.recipient_id==chat.participant2_id)) {
+        			if (message.sender_id==chat.partner_id || message.recipient_id==chat.partner_id) {
         				chat.last_mes_auth_id = user_id;
         				chat.last_mes_auth_name = user_name;
         				chat.last_mes_text = message.message;

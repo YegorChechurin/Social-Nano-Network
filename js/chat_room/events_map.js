@@ -6,7 +6,7 @@ events_map =
     	"method":"handle_incoming_messages(data)"
     },
     {   "handler":"ChatsBarHandler()",
-    	"method":"rearrange_chats_bar(data)"
+    	"method":"rearrange_chats_bar()"
     }]
 },
 {
@@ -16,7 +16,7 @@ events_map =
     	"method":"handle_sent_message(data)"
     },
     {   "handler":"ChatsBarHandler()",
-    	"method":"rearrange_chats_bar(data)"
+    	"method":"rearrange_chats_bar()"
     }]
 },
 {
