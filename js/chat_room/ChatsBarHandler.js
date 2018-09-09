@@ -25,16 +25,16 @@ function ChatsBarHandler(){
         }
         $("#chats_wrapper").html('');
         chats.forEach(form_chat_header);
-        ts = Date.parse(chats[0].last_mes_ts);
+        var ts = chats[0].last_mes_ts;
         Cookies.set('last_mes_ts', ts, {expires:365});
     }
 
 	var form_chats_bar = function(){
         if (chats) {
             $("#chats_wrapper").html('');
-            chats.forEach(form_chat_header);
             chats.forEach(convert_chat_last_mes_ts);
-            ts = Date.parse(chats[0].last_mes_ts);
+            chats.forEach(form_chat_header);
+            var ts = chats[0].last_mes_ts;
             Cookies.set('last_mes_ts', ts, {expires:365});
         }
 	}
@@ -60,7 +60,7 @@ function ChatsBarHandler(){
                 mark_chat_read(parsed_id);
             } else { 
                 $("#"+id).attr('class','chat_header text-truncate');
-                ts = Date.parse(chat.last_mes_ts);
+                var ts = chat.last_mes_ts;
                 check_chat(parsed_id,ts);
                 mark_chat(parsed_id);
             }

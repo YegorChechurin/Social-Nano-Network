@@ -27,9 +27,7 @@ function MessagesHandler() {
             if (last_mes_pos > mes_height) {
                 document.getElementById("mes").scrollTop = last_mes_pos; 
             }
-        } else {
-            alert("You received new message from "+message.sender_name);
-        }
+        } 
         update_chats(message);
 	}
 
