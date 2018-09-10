@@ -3,7 +3,6 @@
 <head>
     <title>Chats</title>
     <?php require '../views/setup.php' ?>
-    <script type="text/javascript" src="http://localhost/SNN/js/listeners.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/events_map.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesListener.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsBarHandler.js"></script>
@@ -39,13 +38,13 @@
 </div>
 </body>
 <script type="text/javascript">
-	var mes_height = document.getElementById("mes").offsetHeight;
-	var n; // message counter reflected in message html id
-	var active_id = <?=$data['active_id']?>; // id of partner with whom the chat is displayed on screen now
+    var active_id = <?=$data['active_id']?>; // id of partner with whom the chat is displayed on screen now
     var active_name = <?=json_encode($data['active_name'])?>; // name of partner with whom the chat is displayed on screen now
-	var user_id = <?=$data['user_id']?>;
-	var user_name = <?=json_encode($data['user_name'])?>;
-	var last_rec_mes_id = <?=$data['last_rec_mes_id']?>;
+    var user_id = <?=$data['user_id']?>;
+    var user_name = <?=json_encode($data['user_name'])?>;
+    var last_rec_mes_id = <?=$data['last_rec_mes_id']?>;
+    var mes_height = document.getElementById("mes").offsetHeight;
+    var n; // message counter reflected in message html id
     var chats;
 
     $("#send_button").click(
@@ -63,8 +62,8 @@
             l.listen_incoming_messages();
         }
     );
-
 </script>
+
 
 
 
