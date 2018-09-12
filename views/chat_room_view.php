@@ -38,13 +38,44 @@
 </div>
 </body>
 <script type="text/javascript">
-    var active_id = <?=$data['active_id']?>; // id of partner with whom the chat is displayed on screen now
-    var active_name = <?=json_encode($data['active_name'])?>; // name of partner with whom the chat is displayed on screen now
+    /**
+     * User id of a chat partner with whom the chat is displayed on screen now
+     */
+    var active_id = <?=$data['active_id']?>; 
+
+    /**
+     * Name of the chat partner with whom the chat is displayed on screen now
+     */ 
+    var active_name = <?=json_encode($data['active_name'])?>;
+
+    /**
+     * User id of the user
+     */ 
     var user_id = <?=$data['user_id']?>;
+
+    /**
+     * User name of the user
+     */
     var user_name = <?=json_encode($data['user_name'])?>;
+
+    /**
+     * Message id of the most recently (last) received message by the user
+     */
     var last_rec_mes_id = <?=$data['last_rec_mes_id']?>;
+
+    /** 
+     * Height of the HTML element with id "mes". It is the element where all the messages of a particular chat are displayed. We need to know its height in order to dispay messages in such a way so that "mes" scrolls when it becomes full and the last message is always displayed in the right place 
+     */
     var mes_height = document.getElementById("mes").offsetHeight;
-    var n; // message counter reflected in message html id
+
+    /** 
+     * This is a counter needed to count how many messages is displayed in "mes". It is used as a part of each message HTML id in order to track position of the last displayed message and to scroll "mes" element accordingly 
+     */
+    var n; 
+
+    /** 
+     * Array of chat objects. Each chat object contains all the necessary metadata about a specific chat 
+     */
     var chats;
 
     $("#send_button").click(
