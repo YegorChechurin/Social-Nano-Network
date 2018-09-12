@@ -20,7 +20,7 @@
             <div id="chats_wrapper">
             </div>
 	   </div>
-		<div class="col-sm-6 d-none d-sm-block" id="mes" >      
+		<div class="col-sm-6 d-none d-sm-block" id="mes">    
         </div>
 		<!--<div class="col-sm-3 d-none d-sm-block" id="sidebar">-->
         <div class="col-sm-3" id="sidebar">
@@ -78,6 +78,9 @@
      */
     var chats;
 
+    /** 
+     * Programming "send_button" so that it can send messages. Class "MessagesListener" is located in js/chat_room/MessagesListener.js 
+     */
     $("#send_button").click(
         function(){
             var l = new MessagesListener();
@@ -87,8 +90,15 @@
 
     $(document).ready(
         function(){
+            /** 
+             * Assembling chats bar located in "chats_wrapper" HTML element. Class "ChatsBarHandler" is located in js/chat_room/ChatsBarHandler.js 
+             */
             var h = new ChatsBarHandler();
             h.form_chats_bar();
+
+            /** 
+             * Starting a listener which will be sending AJAX requests for new incoming messages on a regular basis 
+             */
             var l = new MessagesListener();
             l.listen_incoming_messages();
         }
