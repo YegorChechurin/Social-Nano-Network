@@ -39,49 +39,49 @@
 </body>
 <script type="text/javascript">
     /**
-     * User id of a chat partner with whom the chat is displayed on screen now
+     * User id of a chat partner with whom the chat is displayed on screen now.
      * @type {number}
      */
     var active_id = <?=$data['active_id']?>; 
 
     /**
-     * Name of the chat partner with whom the chat is displayed on screen now
+     * Name of the chat partner with whom the chat is displayed on screen now.
      * @type {string}
      */ 
     var active_name = <?=json_encode($data['active_name'])?>;
 
     /**
-     * User id of the user
+     * User id of the user.
      * @type {number}
      */ 
     var user_id = <?=$data['user_id']?>;
 
     /**
-     * User name of the user
+     * User name of the user.
      * @type {string}
      */
     var user_name = <?=json_encode($data['user_name'])?>;
 
     /**
-     * Message id of the most recently (last) received message by the user
+     * Message id of the most recently (last) received message by the user.
      * @type {number}
      */
     var last_rec_mes_id = <?=$data['last_rec_mes_id']?>;
 
     /** 
-     * Height of the HTML element with id "mes". It is the element where all the messages of a particular chat are displayed. We need to know its height in order to dispay messages in such a way so that "mes" scrolls when it becomes full and the last message is always displayed in the right place 
+     * Height of the HTML element with id "mes". It is the element where all the messages of a particular chat are displayed. We need to know its height in order to dispay messages in such a way so that "mes" scrolls when it becomes full and the last message is always displayed in the right place. 
      * @type {number}
      */
     var mes_height = document.getElementById("mes").offsetHeight;
 
     /** 
-     * This is a counter needed to count how many messages is displayed in "mes". It is used as a part of each message HTML id in order to track position of the last displayed message and to scroll "mes" element accordingly 
+     * This is a counter needed to count how many messages is displayed in "mes". It is used as a part of each message HTML id in order to track position of the last displayed message and to scroll "mes" element accordingly. 
      * @type {number}
      */
     var n; 
 
     /** 
-     * Array of chat objects. Each chat object contains all the necessary metadata about a specific chat 
+     * Array of chat objects. Each chat object contains all the necessary metadata about a specific chat.
      * @type {array}
      */
     var chats;
@@ -105,7 +105,7 @@
             h.form_chats_bar();
 
             /** 
-             * Starting a listener which will be sending AJAX requests for new incoming messages on a regular basis 
+             * Starting a listener which will be sending AJAX requests for new incoming messages on a regular basis. 
              */
             var l = new MessagesListener();
             l.listen_incoming_messages();
