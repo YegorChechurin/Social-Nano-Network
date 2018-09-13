@@ -14,9 +14,11 @@ function Broker(){
      * the given event, array of handler class name and method 
      * pairs is read. Each handler class and its method are 
      * instantiated and implemeneted by eval according to the
-     * order they are written in the events_map array. 
+     * way and order they are written in the events_map array. 
      *
-     *  
+     * @param {string} event - Name of the event to be handled.
+     * @param {*} data - Anything which is required to be 
+     * passed to the invoked handlers.   
      */
 	this.invoke_handlers = function(event,data){
 		events_map.forEach(function(item){
