@@ -41,7 +41,7 @@ function MessagesListener(){
 
 	var fire_event = function(event,data){
 		var broker = new Broker();
-        broker.invoke_handler(event,data);
+        broker.invoke_handlers(event,data);
 	}
 
 }
