@@ -41,7 +41,17 @@ function MessagesHandler() {
         this.register_last_mes_ts();
         update_chats(message);
 	}
-
+    
+    /** 
+     * Displays message on user screen.
+     *
+     * If message is send by the user or received from that
+     * chat partner with whom user is chatting at the moment,
+     * it is displayed in 'mes' element. If 'mes' element is
+     * full, it is automatically scrolled. 
+     *
+     * @param {Object} message - Message to be displayed.
+     */
 	this.display_message = function(message){
 		if (active_id && (message.sender_id==active_id || message.recipient_id==active_id)) {
             n++;
