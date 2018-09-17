@@ -1,5 +1,22 @@
+/** 
+ * Creates a new MessagesListener.
+ * @class 
+ *
+ * MessagesListener posses methods which allow to listen for
+ * incoming and sent messages, and to fire corresponding 
+ * events when new incoming messages arrive or when user 
+ * sends a new message.
+ */
 function MessagesListener(){
-
+    /** 
+     * Listens for the incoming messages.
+     *
+     * Sends AJAX request to the server and waits for the 
+     * response. If response contains new incoming messages, 
+     * event 'incoming_messages' is fired. New AJAX request 
+     * is sent 1 second after response for previous one 
+     * arrives. 
+     */
 	this.listen_incoming_messages = function(){
 		$.get("http://localhost/SNN/ajax/"+user_id+"/messages/"+last_rec_mes_id, 
             function(data, status){
@@ -18,7 +35,18 @@ function MessagesListener(){
             }
         );
 	}
-
+    
+    /** 
+     * Listens for sent messages.
+     *
+     * When user types their message into 'text' element and
+     * hits 'Send' button in order to send the message, 
+     * contents of 'text' element is grabbed. Then this 
+     * contents together with all the necessary data is sent 
+     * to the server by post AJAX request. If request 
+     * succeeds, 'text' element is cleared, message object is 
+     * formed and 'message_sent' event is fired.
+     */
 	this.listen_sent_messages = function(){
 		var text = $("#text").val();
         $.post("http://localhost/SNN/ajax/"+user_id+"/messages",
@@ -38,7 +66,13 @@ function MessagesListener(){
             }
         );
 	}
-
+    
+    /** 
+     * Fires event.
+     *
+     * @param {string} event - Name of the event to be handled.
+     * @param {*} data - Data required to handle the event.   
+     */
 	var fire_event = function(event,data){
 		var broker = new Broker();
         broker.invoke_handlers(event,data);

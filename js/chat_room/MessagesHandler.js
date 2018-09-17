@@ -1,16 +1,45 @@
+/** 
+ * Creates a new MessagesHandler.
+ * @class 
+ */
 function MessagesHandler() {
-
+    
+    /** 
+     * Handles new incoming messages. 
+     *
+     * Updates information about last received message id.
+     * Registers the moment when the last message was 
+     * received using cookies. Displays each message. If 
+     * message sender is not the one with whom user is 
+     * chatting at the moment, message is marked as unread 
+     * on the user screen. Updates 'chats' array which 
+     * contains meta data for all the chats of the user.  
+     *
+     * @param {Object[]} messages - Newly received messages.
+     */
 	this.handle_incoming_messages = function(messages){
-		var last_index = messages.length;
-        last_rec_mes_id = parseInt(messages[last_index-1].message_id);
+		var last_index = messages.length - 1;
+        last_rec_mes_id = parseInt(messages[last_index].message_id);
         this.register_last_mes_ts();
 		messages.forEach(this.display_message);
 		messages.forEach(this.register);
+        messages.forEach(update_chats);
 	}
-
+    
+    /** 
+     * Handles sent message. 
+     *
+     * Displays message sent by user on the user screen. 
+     * Registers the moment when the message was sent using 
+     * cookies. Updates 'chats' array which contains meta 
+     * data for all the chats of the user.
+     *
+     * @param {Object} message - Sent message.
+     */
 	this.handle_sent_message = function(message){
 		this.display_message(message);
         this.register_last_mes_ts();
+        update_chats(message);
 	}
 
 	this.display_message = function(message){
@@ -28,7 +57,6 @@ function MessagesHandler() {
                 document.getElementById("mes").scrollTop = last_mes_pos; 
             }
         } 
-        update_chats(message);
 	}
 
 	this.register_last_mes_ts = function(){

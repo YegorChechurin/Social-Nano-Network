@@ -1,3 +1,7 @@
+/** 
+ * Creates a new ChatsBarHandler.
+ * @class 
+ */
 function ChatsBarHandler(){
 
 	this.form_chats_bar = function(){
