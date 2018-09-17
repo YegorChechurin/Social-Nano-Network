@@ -11,9 +11,9 @@ function Broker(){
      * array contains event's name and array of handler class 
      * name and method pairs. If event's name contained in
      * the events_map array element is equal to the name of
-     * the given event, array of handler class name and method 
+     * the fired event, array of handler class name and method 
      * pairs is read. Each handler class and its method are 
-     * instantiated and implemeneted by eval according to the
+     * instantiated and called dynamically according to the
      * way and order they are written in the events_map array. 
      *
      * @param {string} event - Name of the event to be handled.
@@ -25,8 +25,10 @@ function Broker(){
 			if (event==item.event) {
 				item.handling.forEach(
 					function(item){
-						var h = eval('new '+item.handler);
-				        eval("h."+item.method);
+						var handler_name = item.handler;
+				        var h = new window[handler_name];
+				        var method_name = item.method;
+				        h[method_name](data);
 					}
 				);
 			}
