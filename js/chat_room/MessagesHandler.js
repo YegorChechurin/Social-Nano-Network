@@ -1,22 +1,57 @@
+/** 
+ * Creates a new MessagesHandler.
+ * @class 
+ */
 function MessagesHandler() {
-
+    
+    /** 
+     * Handles new incoming messages. 
+     *
+     * Updates information about last received message id.
+     * Registers the moment when the last message was 
+     * received using cookies. Displays each message. If 
+     * message sender is not the one with whom user is 
+     * chatting at the moment, message is marked as unread 
+     * on the user screen. Updates 'chats' array which 
+     * contains meta data for all the chats of the user.  
+     *
+     * @param {Object[]} messages - Newly received messages.
+     */
 	this.handle_incoming_messages = function(messages){
-		var last_index = messages.length;
-        last_rec_mes_id = parseInt(messages[last_index-1].message_id);
+		var last_index = messages.length - 1;
+        last_rec_mes_id = parseInt(messages[last_index].message_id);
         this.register_last_mes_ts();
 		messages.forEach(this.display_message);
 		messages.forEach(this.register);
-		var h = new ChatsBarHandler();
-		h.form_chats_bar();
+        messages.forEach(update_chats);
 	}
-
+    
+    /** 
+     * Handles sent message. 
+     *
+     * Displays message sent by user on the user screen. 
+     * Registers the moment when the message was sent using 
+     * cookies. Updates 'chats' array which contains meta 
+     * data for all the chats of the user.
+     *
+     * @param {Object} message - Sent message.
+     */
 	this.handle_sent_message = function(message){
 		this.display_message(message);
         this.register_last_mes_ts();
-        var h = new ChatsBarHandler();
-		h.form_chats_bar();
+        update_chats(message);
 	}
-
+    
+    /** 
+     * Displays message on user screen.
+     *
+     * If message is send by the user or received from that
+     * chat partner with whom user is chatting at the moment,
+     * it is displayed in 'mes' element. If 'mes' element is
+     * full, it is automatically scrolled. 
+     *
+     * @param {Object} message - Message to be displayed.
+     */
 	this.display_message = function(message){
 		if (active_id && (message.sender_id==active_id || message.recipient_id==active_id)) {
             n++;
@@ -31,9 +66,7 @@ function MessagesHandler() {
             if (last_mes_pos > mes_height) {
                 document.getElementById("mes").scrollTop = last_mes_pos; 
             }
-        } else {
-            alert("You received new message from "+message.sender_name);
-        }
+        } 
 	}
 
 	this.register_last_mes_ts = function(){
@@ -65,6 +98,23 @@ function MessagesHandler() {
 		} else {
 			Cookies.set('unread_chats', [chat_partner_id], {expires:365});
 		}
+	}
+
+	var update_chats = function(message) {
+		if (chats) {
+        	chats.forEach(
+        		function(chat) {
+        			if (message.sender_id==chat.partner_id || message.recipient_id==chat.partner_id) {
+        				chat.last_mes_auth_id = user_id;
+        				chat.last_mes_auth_name = user_name;
+        				chat.last_mes_text = message.message;
+        				var date = new Date();
+                        var t = date.getTime();
+        				chat.last_mes_ts = t;
+        			}
+        		}
+        	);
+        }
 	}
 
 } 

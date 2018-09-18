@@ -1,3 +1,7 @@
+/** 
+ * Creates a new ChatsBarHandler.
+ * @class 
+ */
 function ChatsBarHandler(){
 
 	this.form_chats_bar = function(){
@@ -11,14 +15,38 @@ function ChatsBarHandler(){
         );
 	}
 
+    this.rearrange_chats_bar = function() {
+        var l = chats.length;
+        var stamp;
+        for (var i = 0; i < l; i++) {
+            for (var j = 1; j < (l-i); j++) {
+                if (chats[j-1].last_mes_ts<chats[j].last_mes_ts) {
+                    stamp = chats[j-1];
+                    chats[j-1] = chats[j];
+                    chats[j] = stamp;
+                }
+            }
+        }
+        $("#chats_wrapper").html('');
+        chats.forEach(form_chat_header);
+        var ts = chats[0].last_mes_ts;
+        Cookies.set('last_mes_ts', ts, {expires:365});
+    }
+
 	var form_chats_bar = function(){
         if (chats) {
             $("#chats_wrapper").html('');
+            chats.forEach(convert_chat_last_mes_ts);
             chats.forEach(form_chat_header);
-            ts = Date.parse(chats[0].last_mes_ts);
+            var ts = chats[0].last_mes_ts;
             Cookies.set('last_mes_ts', ts, {expires:365});
         }
 	}
+
+    var convert_chat_last_mes_ts = function(chat) {
+        var t = Date.parse(chat.last_mes_ts);
+        chat.last_mes_ts = t;
+    }
 
 	var form_chat_header = function(chat){
             var id = 'c'+chat.partner_id; 
@@ -36,7 +64,7 @@ function ChatsBarHandler(){
                 mark_chat_read(parsed_id);
             } else { 
                 $("#"+id).attr('class','chat_header text-truncate');
-                ts = Date.parse(chat.last_mes_ts);
+                var ts = chat.last_mes_ts;
                 check_chat(parsed_id,ts);
                 mark_chat(parsed_id);
             }
@@ -51,8 +79,22 @@ function ChatsBarHandler(){
                 if (status=="success") {
                     $("#mes").html('')
                     var messages = JSON.parse(data);
-                    h = new MessagesHandler();
-                    messages.forEach(h.display_message);
+                    messages.forEach(
+                        function(message) {
+                            n++;
+                            if (message.sender_id == user_id) {
+                                var content = '<div class="message_outlet" id="m'+n+'"><b>You:</b> '+message.message+'</div><br>';
+                                $("#mes").append(content);
+                            } else {
+                                var content = '<div class="message_inlet" id="m'+n+'"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
+                                $("#mes").append(content);
+                            }
+                            var last_mes_pos = document.getElementById("m"+n).offsetTop;
+                            if (last_mes_pos > mes_height) {
+                                document.getElementById("mes").scrollTop = last_mes_pos; 
+                            }
+                        }
+                    );
                 }
             }
         );
