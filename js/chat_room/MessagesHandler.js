@@ -129,7 +129,16 @@ function MessagesHandler() {
 			Cookies.set('unread_chats', [chat_partner_id], {expires:365});
 		}
 	}
-
+    
+    /** 
+     * Updates chats.
+     *
+     * Updates meta data of a particular chat according to
+     * last message of this chat.
+     *
+     * @param {Object} message - New message, either sent or
+     * received.
+     */
 	var update_chats = function(message) {
 		if (chats) {
         	chats.forEach(
