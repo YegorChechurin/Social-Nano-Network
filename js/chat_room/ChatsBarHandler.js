@@ -3,7 +3,17 @@
  * @class 
  */
 function ChatsBarHandler(){
-
+    /** 
+     * Forms chats bar.
+     *
+     * Sends AJAX get request to the server in order to fetch
+     * chats meta data: id and names of participants, id and 
+     * name of last message author, text and timestamp of 
+     * last message. Servers sends reply containing all this
+     * information in json format. It is parsed and stored in
+     * chats global array. Using this chats array chats bar 
+     * is built in 'chats_wrapper' element. 
+     */
 	this.form_chats_bar = function(){
 		$.get("http://localhost/SNN/ajax/"+user_id+"/chats", 
             function(data, status){
@@ -14,7 +24,18 @@ function ChatsBarHandler(){
             }
         );
 	}
-
+    
+    /** 
+     * Rearranges chats bar. 
+     *
+     * Sorts chats array in descending (reverse) order based 
+     * on last message timestamp: chat with largest last
+     * message timestamp should be first and chat with the
+     * smallest should be the last. Rebuilds chats bar based
+     * on the sorted chats array. Updates and stores in 
+     * cookies information about timestamp of the very last 
+     * message (either sent or received) of all the chats. 
+     */
     this.rearrange_chats_bar = function() {
         var l = chats.length;
         var stamp;
