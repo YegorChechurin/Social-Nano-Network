@@ -69,12 +69,31 @@ function MessagesHandler() {
         } 
 	}
 
+    /** 
+     * Registers timestamp of the last messages.
+     *
+     * Registers the time moment when the user sent or 
+     * received their last messages. This time moment is 
+     * stored in cookies. 
+     */
 	this.register_last_mes_ts = function(){
 		var date = new Date();
         var last_mes_ts = date.getTime();
         Cookies.set('last_mes_ts', last_mes_ts, {expires:365});
 	}
-
+    
+    /** 
+     * Defines chat status.
+     *
+     * Defines status of a certain chat when user receives a    
+     * new message from participant of this chat. If the 
+     * chat is not opened on the user screen at that moment,
+     * when they receive a message from participant of this
+     * chat, this chat is registered as the one containing
+     * unread messages. 
+     *
+     * @param {Object} message - New incoming message.
+     */
 	this.register = function(message){
 		if (active_id) {
 			if (message.sender_id!=active_id) {
