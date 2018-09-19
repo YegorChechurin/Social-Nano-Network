@@ -105,7 +105,18 @@ function MessagesHandler() {
 			register_unread(id);
 		}
 	}
-
+    
+    /** 
+     * Registers chat as the one containing unread messages.
+     *
+     * Array unread_chats consists of list of user id of 
+     * those chat partners, chats with whom contain messages 
+     * which user have not read yet. This array is stored
+     * in cookies.
+     *
+     * @param {number} chat_partner_id - User id of the chat
+     * partner. 
+     */
 	var register_unread = function(chat_partner_id){
 		var unread_chats = Cookies.getJSON('unread_chats');
 		if (unread_chats) {
