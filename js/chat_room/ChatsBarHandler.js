@@ -53,10 +53,12 @@ function ChatsBarHandler(){
         var ts = chats[0].last_mes_ts;
         Cookies.set('last_mes_ts', ts, {expires:365});
     }
-
+    
+    /** 
+     * Converts mysql timestamps into 
+     */
 	var form_chats_bar = function(){
         if (chats) {
-            $("#chats_wrapper").html('');
             chats.forEach(convert_chat_last_mes_ts);
             chats.forEach(form_chat_header);
             var ts = chats[0].last_mes_ts;
