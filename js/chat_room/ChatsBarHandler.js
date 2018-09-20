@@ -65,32 +65,47 @@ function ChatsBarHandler(){
         Cookies.set('last_mes_ts', ts, {expires:365});
     }
     
-
+    /** 
+     * Converts timestamp of chat last message from MySQL
+     * string format into number of milliseconds since 
+     * January 1, 1970, 00:00:00 UTC. 
+     *
+     * @param {Object} chat - Chat object containing meta
+     * data about a particular chat.
+     */
     var convert_chat_last_mes_ts = function(chat) {
         var t = Date.parse(chat.last_mes_ts);
         chat.last_mes_ts = t;
     }
-
+    
+    /** 
+     * Forms chat header.
+     *
+     * Appends new chat header to chats bar.
+     *
+     * @param {Object} chat - Chat object containing meta
+     * data about a particular chat.
+     */
 	var form_chat_header = function(chat){
-            var id = 'c'+chat.partner_id; 
-            $("#chats_wrapper").append('<div id="'+id+'"></div>');
-            $("#"+id).click(function(){
-                display_chat(chat.partner_id,chat.partner_name);
-            });
-            $("#"+id).html('<b>'+chat.partner_name+'</b><br>'+
-            chat.last_mes_auth_name+': '+chat.last_mes_text);
-            $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
-            var parsed_id = parseInt(chat.partner_id);
-            if (chat.partner_id==active_id) {
-                $("#"+id).attr('class','active_chat_header text-truncate');
-                register_read(parsed_id);
-                mark_chat_read(parsed_id);
-            } else { 
-                $("#"+id).attr('class','chat_header text-truncate');
-                var ts = chat.last_mes_ts;
-                check_chat(parsed_id,ts);
-                mark_chat(parsed_id);
-            }
+        var id = 'c'+chat.partner_id; 
+        $("#chats_wrapper").append('<div id="'+id+'"></div>');
+        $("#"+id).click(function(){
+            display_chat(chat.partner_id,chat.partner_name);
+        });
+        $("#"+id).html('<b>'+chat.partner_name+'</b><br>'+
+        chat.last_mes_auth_name+': '+chat.last_mes_text);
+        $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
+        var parsed_id = parseInt(chat.partner_id);
+        if (chat.partner_id==active_id) {
+            $("#"+id).attr('class','active_chat_header text-truncate');
+            register_read(parsed_id);
+            mark_chat_read(parsed_id);
+        } else { 
+            $("#"+id).attr('class','chat_header text-truncate');
+            var ts = chat.last_mes_ts;
+            check_chat(parsed_id,ts);
+            mark_chat(parsed_id);
+        }
 	}
 
 	var display_chat = function(partner_id,partner_name){
