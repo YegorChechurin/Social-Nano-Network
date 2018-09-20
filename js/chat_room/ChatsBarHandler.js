@@ -4,22 +4,33 @@
  */
 function ChatsBarHandler(){
     /** 
-     * Forms chats bar.
+     * Builds chats bar.
      *
      * Sends AJAX get request to the server in order to fetch
      * chats meta data: id and names of participants, id and 
      * name of last message author, text and timestamp of 
-     * last message. Servers sends reply containing all this
+     * last message. Server sends reply containing all this
      * information in json format. It is parsed and stored in
-     * chats global array. Using this chats array chats bar 
-     * is built in 'chats_wrapper' element. 
+     * chats global array. MySQL timestamps are converted 
+     * into number of milliseconds since January 1, 1970, 
+     * 00:00:00 UTC. Chats are sorted so that chat whose
+     * last message timestamp is the largest, has index 0 in
+     * chats array. Timestamp of the first element of chats
+     * array is stored in cookies. Using information 
+     * contained in chats array, chats bar is built in 
+     * 'chats_wrapper' element. 
      */
-	this.form_chats_bar = function(){
+	this.build_chats_bar = function(){
 		$.get("http://localhost/SNN/ajax/"+user_id+"/chats", 
             function(data, status){
                 if (status=="success") {
                     chats = JSON.parse(data);
-                    form_chats_bar();
+                    if (chats) {
+                        chats.forEach(convert_chat_last_mes_ts);
+                        var ts = chats[0].last_mes_ts;
+                        Cookies.set('last_mes_ts', ts, {expires:365});
+                        chats.forEach(form_chat_header);
+                    }
                 }
             }
         );
@@ -54,17 +65,6 @@ function ChatsBarHandler(){
         Cookies.set('last_mes_ts', ts, {expires:365});
     }
     
-    /** 
-     * Converts mysql timestamps into 
-     */
-	var form_chats_bar = function(){
-        if (chats) {
-            chats.forEach(convert_chat_last_mes_ts);
-            chats.forEach(form_chat_header);
-            var ts = chats[0].last_mes_ts;
-            Cookies.set('last_mes_ts', ts, {expires:365});
-        }
-	}
 
     var convert_chat_last_mes_ts = function(chat) {
         var t = Date.parse(chat.last_mes_ts);

@@ -82,7 +82,7 @@
 
     /** 
      * Array of chat objects. Each chat object contains all the necessary metadata about a specific chat.
-     * @type {array}
+     * @type {Object[]}
      */
     var chats;
 
@@ -102,7 +102,7 @@
              * Assembling chats bar located in "chats_wrapper" HTML element. Class "ChatsBarHandler" is located in js/chat_room/ChatsBarHandler.js 
              */
             var h = new ChatsBarHandler();
-            h.form_chats_bar();
+            h.build_chats_bar();
 
             /** 
              * Starting a listener which will be sending AJAX requests for new incoming messages on a regular basis. 
