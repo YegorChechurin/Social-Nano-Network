@@ -1,6 +1,10 @@
 /** 
  * Creates a new MessagesHandler.
  * @class 
+ *
+ * MessagesHandler posses methods which are required for 
+ * displaying new received and sent messages, and keeping
+ * chats meta data up-to-date.
  */
 function MessagesHandler() {
     
@@ -87,7 +91,7 @@ function MessagesHandler() {
      *
      * Defines status of a certain chat when user receives a    
      * new message from participant of this chat. If the 
-     * chat is not opened on the user screen at that moment,
+     * chat is not opened on the user screen at that moment
      * when they receive a message from participant of this
      * chat, this chat is registered as the one containing
      * unread messages. 

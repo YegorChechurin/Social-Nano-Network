@@ -1,6 +1,10 @@
 /** 
  * Creates a new ChatsBarHandler.
  * @class 
+ *
+ * ChatsBarHandler posses methods, required for buiding 
+ * chats bar, and rearranging it, when user receives or sends
+ * a new message.
  */
 function ChatsBarHandler(){
     /** 
