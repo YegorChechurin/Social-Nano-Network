@@ -81,7 +81,12 @@ function ChatsBarHandler(){
     /** 
      * Forms chat header.
      *
-     * Appends new chat header to chats bar.
+     * Appends new chat header to chats bar, fills it with 
+     * chat meta data, appends click event listener to it - 
+     * display_chat function. Checks whether the chat 
+     * represented by newly appended chat header has any
+     * unread messages. If it does, chat header is marked
+     * accordingly.
      *
      * @param {Object} chat - Chat object containing meta
      * data about a particular chat.
@@ -107,7 +112,25 @@ function ChatsBarHandler(){
             mark_chat(parsed_id);
         }
 	}
-
+    
+    /** 
+     * Displays chat on user screen.
+     *
+     * This function is called when user clicks on a chat
+     * header. AJAX request containing user id and id of the
+     * chat partner is sent to the server. Response to this
+     * request contains message objects of all the messages
+     * belonging to the chat. These message objects consist
+     * of name and id of sender and receiver, message text
+     * and timestamp. Each message is displayed in 'mes' 
+     * html element according to the order they were sent.
+     * If 'mes' element gets full with messages, it is 
+     * scrolled so that the user can see the last message.
+     * Chat headers are updated.
+     *
+     * @param {number} partner_id - User id of chat partner.
+     * @param {string} partner_name - Name of chat partner.
+     */
 	var display_chat = function(partner_id,partner_name){
 		n = 0;
         active_id = partner_id;  
@@ -149,7 +172,22 @@ function ChatsBarHandler(){
             }
         });
 	}
-
+    
+    /** 
+     * Checks whether chat has any unread messages.
+     *
+     * Compares timestamp of last message in the chat to the
+     * timestamp stored in cookies. If timestamp of the last
+     * message in the chat exceeds the one stored in cookies,
+     * it means that this particular chat contains unread 
+     * messages.
+     *
+     * @param {number} chat_partner_id - User id of chat 
+     * partner. 
+     * @param {number} ts - Timestamp of last message in 
+     * chat in format of number of milliseconds since 
+     * January 1, 1970, 00:00:00 UTC.
+     */
 	var check_chat = function(chat_partner_id,ts) {
         var saved_ts = Cookies.getJSON('last_mes_ts');
         if (ts>saved_ts) {
