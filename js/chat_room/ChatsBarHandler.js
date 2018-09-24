@@ -172,7 +172,7 @@ function ChatsBarHandler(){
             }
         });
 	}
-    
+
     /** 
      * Checks whether chat has any unread messages.
      *
@@ -194,8 +194,21 @@ function ChatsBarHandler(){
             register_unread(chat_partner_id);
         }
     }
-
-	var register_read = function(chat_partner_id){
+    
+    /** 
+     * Registers chat as the one which does NOT contain any
+     * unread messages. 
+     *
+     * Array unread_chats is stored in cookies. It consists 
+     * of user id of those chat partners, chats with whom 
+     * contain unread messages. This array is read and if
+     * chat_partner_id is present in the array, it is removed
+     * from the array. 
+     *
+     * @param {number} chat_partner_id - User id of chat 
+     * partner. 
+     */
+	var register_read = function(chat_partner_id) {
 		var unread_chats = Cookies.getJSON('unread_chats');
         if (unread_chats) {
             var index = unread_chats.indexOf(chat_partner_id);
@@ -205,7 +218,20 @@ function ChatsBarHandler(){
             }
         }
 	}
-
+    
+    /** 
+     * Registers chat as the one which does contain unread 
+     * messages. 
+     *
+     * Array unread_chats is stored in cookies. It consists 
+     * of user id of those chat partners, chats with whom 
+     * contain unread messages. This array is read and if
+     * chat_partner_id is not present in the array, it is 
+     * added to the array. 
+     *
+     * @param {number} chat_partner_id - User id of chat 
+     * partner. 
+     */
 	var register_unread = function(chat_partner_id){
 		var unread_chats = Cookies.getJSON('unread_chats');
         if (unread_chats) {
@@ -218,7 +244,21 @@ function ChatsBarHandler(){
         	Cookies.set('unread_chats', [chat_partner_id], {expires:365});
         }
 	}
-
+    
+    /** 
+     * Marks chat header as read or unread. 
+     *
+     * Array unread_chats is stored in cookies. It consists 
+     * of user id of those chat partners, chats with whom 
+     * contain unread messages. This array is read and if
+     * chat_partner_id is not present in the array,
+     * corresponding chat header is marked as read. If it is
+     * present in the array, corresponding chat header is 
+     * marked as unread. 
+     *
+     * @param {number} chat_partner_id - User id of chat 
+     * partner. 
+     */
 	var mark_chat = function(chat_partner_id){
 		var unread_chats = Cookies.getJSON('unread_chats');
         if (unread_chats) {
@@ -232,11 +272,23 @@ function ChatsBarHandler(){
             mark_chat_read(chat_partner_id);
         }
 	}
-
+    
+    /** 
+     * Marks chat header as read. 
+     *
+     * @param {number} chat_partner_id - User id of chat 
+     * partner. 
+     */
 	var mark_chat_read = function(chat_partner_id){
 		$("#unread_c"+chat_partner_id).attr('class','invisible');
 	} 
-
+    
+    /** 
+     * Marks chat header as unread. 
+     *
+     * @param {number} chat_partner_id - User id of chat 
+     * partner. 
+     */
 	var mark_chat_unread = function(chat_partner_id){
 		$("#unread_c"+chat_partner_id).attr('class','visible');
         $("#c"+chat_partner_id).attr('class','chat_header_unread text-truncate');
