@@ -39,13 +39,15 @@
 </body>
 <script type="text/javascript">
     /**
-     * User id of a chat partner with whom the chat is displayed on screen now.
+     * User id of a chat partner with whom the chat 
+     * is displayed on screen now.
      * @type {number}
      */
     var active_id = <?=$data['active_id']?>; 
 
     /**
-     * Name of the chat partner with whom the chat is displayed on screen now.
+     * Name of the chat partner with whom the chat 
+     * is displayed on screen now.
      * @type {string}
      */ 
     var active_name = <?=json_encode($data['active_name'])?>;
@@ -63,7 +65,8 @@
     var user_name = <?=json_encode($data['user_name'])?>;
 
     /**
-     * Message id of the most recently (last) received message by the user.
+     * Message id of the most recently (last) 
+     * received message by the user.
      * @type {number}
      */
     var last_rec_mes_id = <?=$data['last_rec_mes_id']?>;
@@ -81,8 +84,9 @@
     var n; 
 
     /** 
-     * Array of chat objects. Each chat object contains all the necessary metadata about a specific chat.
-     * @type {array}
+     * Array of chat objects. Each chat object contains 
+     * all the necessary metadata about a specific chat.
+     * @type {Object[]}
      */
     var chats;
 
@@ -102,7 +106,7 @@
              * Assembling chats bar located in "chats_wrapper" HTML element. Class "ChatsBarHandler" is located in js/chat_room/ChatsBarHandler.js 
              */
             var h = new ChatsBarHandler();
-            h.form_chats_bar();
+            h.build_chats_bar();
 
             /** 
              * Starting a listener which will be sending AJAX requests for new incoming messages on a regular basis. 

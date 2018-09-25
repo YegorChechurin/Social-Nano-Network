@@ -1,6 +1,10 @@
 /** 
  * Creates a new MessagesHandler.
  * @class 
+ *
+ * MessagesHandler posses methods which are required for 
+ * displaying new received and sent messages, and keeping
+ * chats meta data up-to-date.
  */
 function MessagesHandler() {
     
@@ -69,12 +73,31 @@ function MessagesHandler() {
         } 
 	}
 
+    /** 
+     * Registers timestamp of the last messages.
+     *
+     * Registers the time moment when the user sent or 
+     * received their last messages. This time moment is 
+     * stored in cookies. 
+     */
 	this.register_last_mes_ts = function(){
 		var date = new Date();
         var last_mes_ts = date.getTime();
         Cookies.set('last_mes_ts', last_mes_ts, {expires:365});
 	}
-
+    
+    /** 
+     * Defines chat status.
+     *
+     * Defines status of a certain chat when user receives a    
+     * new message from participant of this chat. If the 
+     * chat is not opened on the user screen at that moment
+     * when they receive a message from participant of this
+     * chat, this chat is registered as the one containing
+     * unread messages. 
+     *
+     * @param {Object} message - New incoming message.
+     */
 	this.register = function(message){
 		if (active_id) {
 			if (message.sender_id!=active_id) {
@@ -86,7 +109,18 @@ function MessagesHandler() {
 			register_unread(id);
 		}
 	}
-
+    
+    /** 
+     * Registers chat as the one containing unread messages.
+     *
+     * Array unread_chats consists of list of user id of 
+     * those chat partners, chats with whom contain messages 
+     * which user have not read yet. This array is stored
+     * in cookies.
+     *
+     * @param {number} chat_partner_id - User id of the chat
+     * partner. 
+     */
 	var register_unread = function(chat_partner_id){
 		var unread_chats = Cookies.getJSON('unread_chats');
 		if (unread_chats) {
@@ -98,6 +132,32 @@ function MessagesHandler() {
 		} else {
 			Cookies.set('unread_chats', [chat_partner_id], {expires:365});
 		}
+	}
+    
+    /** 
+     * Updates chats.
+     *
+     * Updates meta data of a particular chat according to
+     * last message of this chat.
+     *
+     * @param {Object} message - New message, either sent or
+     * received.
+     */
+	var update_chats = function(message) {
+		if (chats) {
+        	chats.forEach(
+        		function(chat) {
+        			if (message.sender_id==chat.partner_id || message.recipient_id==chat.partner_id) {
+        				chat.last_mes_auth_id = user_id;
+        				chat.last_mes_auth_name = user_name;
+        				chat.last_mes_text = message.message;
+        				var date = new Date();
+                        var t = date.getTime();
+        				chat.last_mes_ts = t;
+        			}
+        		}
+        	);
+        }
 	}
 
 	var update_chats = function(message) {
