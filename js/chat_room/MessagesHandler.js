@@ -160,4 +160,21 @@ function MessagesHandler() {
         }
 	}
 
+	var update_chats = function(message) {
+		if (chats) {
+        	chats.forEach(
+        		function(chat) {
+        			if (message.sender_id==chat.partner_id || message.recipient_id==chat.partner_id) {
+        				chat.last_mes_auth_id = user_id;
+        				chat.last_mes_auth_name = user_name;
+        				chat.last_mes_text = message.message;
+        				var date = new Date();
+                        var t = date.getTime();
+        				chat.last_mes_ts = t;
+        			}
+        		}
+        	);
+        }
+	}
+
 } 
