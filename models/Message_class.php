@@ -2,7 +2,7 @@
 
 	namespace Models;
 
-    require_once 'chat_class.php';
+    require_once 'Chat_class.php';
 
     class Message {
 
