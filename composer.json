@@ -1,0 +1,9 @@
+{
+	"autoload":{
+		"psr-4":{
+			"Skeleton\\RequestHandling\\":"skeleton/RequestHandling/",
+			"Models\\":"models/",
+			"Controllers\\Pub\\":"controllers/Public/"
+		}
+	}
+}
