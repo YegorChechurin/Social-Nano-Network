@@ -2,10 +2,8 @@
 
     use Skeleton\RequestHandling\Request;
     use Models\Message;
-    
+
     require_once '../skeleton/db_con.php';
-    require_once '../skeleton/Request_class.php';
-    require_once '../models/Message_class.php';
 
     $request = new Request();
     $mes_info = array();

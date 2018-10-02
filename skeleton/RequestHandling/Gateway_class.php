@@ -3,8 +3,6 @@
     namespace Skeleton\RequestHandling;
     use Skeleton\RequestHandling\iRouter;
 
-    require_once 'Router_interface.php';
-
     class Gateway implements iRouter {
 
     	private $target_uri;

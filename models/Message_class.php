@@ -2,8 +2,6 @@
 
 	namespace Models;
 
-    require_once 'Chat_class.php';
-
     class Message {
 
     	public static function postMessage($conn,$mes_info) {

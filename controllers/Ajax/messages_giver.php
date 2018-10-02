@@ -2,10 +2,8 @@
 
     use Skeleton\RequestHandling\Request;
     use Models\User;
-    
+
     require_once '../skeleton/db_con.php';
-    require_once '../skeleton/Request_class.php';
-    require_once '../models/User_class.php';
 
     function long_polling(User $user, $message_id, $timestamp) {
         $start = $timestamp;

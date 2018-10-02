@@ -4,11 +4,8 @@
     use Controllers\Pub\PublicController;
     use Skeleton\RequestHandling\Request;
     use Models\User;
-
-    require_once 'PublicController_class.php';
+    
     require_once '../skeleton/db_con.php';
-    require_once '../skeleton/Request_class.php';
-    require_once '../models/User_class.php';
 
     class ChatRoom extends PublicController {
 
