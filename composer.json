@@ -5,5 +5,8 @@
 			"Models\\":"models/",
 			"Controllers\\Pub\\":"controllers/Public/"
 		}		
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^7"
 	}
 }
