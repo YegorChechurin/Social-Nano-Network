@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit 
+    bootstrap="vendor/autoload.php"
+    verbose="true">
+    <testsuites>
+        <testsuite name="database">
+            <directory>tests/skeleton/Database</directory>
+            <file>tests/skeleton/Database/DatabaseTest.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>
