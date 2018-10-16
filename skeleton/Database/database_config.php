@@ -2,14 +2,12 @@
 
     namespace Skeleton\Database;
 
-    const DATABASE = 'mysql';
-
-    const SCHEMA = 'snn';
-
-    const HOST = 'localhost';
+    const DSN = 'mysql:dbname=snn;host=localhost';
 
     const USER = 'root';
 
     const PASSWORD = '';
+
+    const SCHEMA = 'snn';
 
 ?>
