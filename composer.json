@@ -5,7 +5,8 @@
 			"Skeleton\\Database\\":"skeleton/Database/",
 			"Models\\":"models/",
 			"Controllers\\Pub\\":"controllers/Public/"
-		}		
+		},
+		"files":["skeleton/Database/database_config.php"]		
 	},
 	"require-dev": {
 		"phpunit/phpunit": "^7",
