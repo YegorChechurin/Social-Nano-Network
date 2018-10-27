@@ -8,8 +8,6 @@ use const Skeleton\Database\USER;
 use const Skeleton\Database\PASSWORD;
 use const Skeleton\Database\SCHEMA;
 
-require_once '/opt/lampp/htdocs/SNN/skeleton/Database/database_config.php';
-
 class DatabaseTest extends TestCase {
 
     use TestCaseTrait;
@@ -30,34 +28,46 @@ class DatabaseTest extends TestCase {
         $values = [3,'test','yegor','now'];
         $db = new Database();
         $db->insert($table,$fields,$values);
-        $queryTable = $this->getConnection()->createQueryTable($table,'SELECT * FROM '.$table);
+        $queryTable = $this->getConnection()->createQueryTable($table,"SELECT * FROM {$table}");
         $expectedTable = $this->createFlatXmlDataSet(dirname(__FILE__).'/expectedInsert.xml')
                               ->getTable($table);
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
 
+    public function testSelect() {
+        $table = 'unit_tests';
+        $fields = ['content'];
+        $clause = 'id=:id';
+        $clause_pars = [':id'=>2];
+        $db = new Database();
+        $crude_outcome = $db->select($table,$fields,$clause,$clause_pars);
+        $outcome = $crude_outcome[0]['content'];
+        $expected_outcome = 'I like it!';
+        $this->assertTrue($outcome==$expected_outcome);
+        $clause = 'user=:user';
+        $clause_pars = [':user'=>'nancy'];
+        $crude_outcome = $db->select($table,$fields,$clause,$clause_pars);
+        $outcome = $crude_outcome[0]['content'];
+        $expected_outcome = 'I like it!';
+        $this->assertTrue($outcome==$expected_outcome);
+    }
+
+    public function testUpdate() {
+        $table = 'unit_tests';
+        $fields = ['content','created'];
+        $clause = 'id=:id AND user=:user';
+        $map = [
+            ':id'=>1, ':user'=>'joe', ':content'=>'UPDATED', 
+            ':created'=>'right now'
+        ];
+        $db = new Database();
+        $db->update($table,$fields,$clause,$map);
+        $queryTable = $this->getConnection()->createQueryTable($table,"SELECT * FROM {$table}");
+        $expectedTable = $this->createFlatXmlDataSet(dirname(__FILE__).'/expectedUpdate.xml')
+                              ->getTable($table);
+        $this->assertTablesEqual($expectedTable, $queryTable);
+    }
+
 }
-
-
-    // class DatabaseTest extends TestCase {
-
-    //     public function testConnectionIsCreated() {
-    //         $database = new Database();
-    //         $connection = $database->conn;
-    //         $pdo = new PDO('sqlite::memory:');
-    //         $this->assertTrue(gettype($connection)=='object');
-    //     }
-
-    //     public function testSprintf() {
-    //         $table = 'table';
-    //         $fields = ['first', 'second', 'third'];
-    //         $values = [1,2,3];
-    //         $goal = 'INSERT INTO table (first,second,third) VALUES (:first,:second,:third)';
-    //         $database = new Database();
-    //         $test = $database->insert($table,$fields,$values);
-    //         $this->assertTrue($test==$goal);
-    //     }
-
-    // }
 
 ?>
