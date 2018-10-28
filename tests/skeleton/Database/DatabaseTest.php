@@ -36,10 +36,17 @@ class DatabaseTest extends TestCase {
 
     public function testSelect() {
         $table = 'unit_tests';
+        $fields = ['*'];
+        $db = new Database();
+        $outcome = $db->select($table,$fields);
+        $expected_outcome = [
+            ['id'=>1, 'content'=>'Hello buddy!', 'user'=>'joe', 'created'=>'2010-04-24 17:15:23'],
+            ['id'=>2, 'content'=>'I like it!', 'user'=>'nancy', 'created'=>'2010-04-26 12:14:20']
+        ];
+        $this->assertEquals($expected_outcome,$outcome);
         $fields = ['content'];
         $clause = 'id=:id';
         $clause_pars = [':id'=>2];
-        $db = new Database();
         $crude_outcome = $db->select($table,$fields,$clause,$clause_pars);
         $outcome = $crude_outcome[0]['content'];
         $expected_outcome = 'I like it!';
