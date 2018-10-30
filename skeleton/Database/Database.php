@@ -7,8 +7,8 @@
      */
     class Database {
         
-        /**
-         * Database connection
+        /** 
+         * @var PDO - Holds a database connection 
          */
     	private $conn;
 
