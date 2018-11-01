@@ -7,5 +7,9 @@
             <directory>tests/skeleton/Database</directory>
             <file>tests/skeleton/Database/DatabaseTest.php</file>
         </testsuite>
+        <testsuite name="messenger">
+            <directory>tests/models</directory>
+            <file>tests/models/MessengerTest.php</file>
+        </testsuite>
     </testsuites>
 </phpunit>
