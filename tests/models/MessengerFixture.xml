@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<dataset>
+    <messages_tests recipient_id="2" recipient_name="User2" sender_id="1" sender_name="User1" message="Hi there!:)" />
+    <chats_tests chat_key="3" participant1_id="1" participant2_id="2" participant1_name="User1" participant2_name="User2" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Hi there!:)" />
+</dataset>
