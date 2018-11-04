@@ -72,7 +72,7 @@
     			':sender_id' => $mes_info['sender_id'],
     			':recipient_id' => $mes_info['recipient_id']
     		];
-    		$this->DB->update($table,$clause,$map);
+    		$this->DB->update($table,$fields,$clause,$map);
     	}
 
     	public function fetch_chat_messages($id_1,$id_2) {
