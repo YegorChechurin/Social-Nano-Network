@@ -81,7 +81,7 @@
                 $query = sprintf($format,$fields,$table);
                 $prep = $this->conn->prepare($query);
                 foreach ($clause_pars as $key => $value) {
-                    $prep->bindParam($key, $value);
+                    $prep->bindValue($key, $value);
                 }
                 $prep->execute();
                 $result = $prep->fetchAll(\PDO::FETCH_ASSOC);
@@ -109,7 +109,6 @@
          *     ':par3'=>value_of_par3,
          *     ':par4'=>value_of_par4
          *];
-         * 
          */
         public function update($table, Array $fields, $clause, Array $parameter_map) {
             $format = "UPDATE %s SET %s WHERE {$clause}";
@@ -119,6 +118,33 @@
             }
             $structure = implode(',',$param_fields);
             $query = sprintf($format,$table,$structure);
+            $prep = $this->conn->prepare($query);
+            foreach ($parameter_map as $key => $value) {
+                $prep->bindValue($key, $value);
+            }
+            $result = $prep->execute();
+        }
+
+        /**
+         * Performs DELETE sql operation by means of PDO prepared statement
+         *
+         * @param string $table - Name of database table where data is deleted.
+         * @param string $clause - WHERE clause in a form of prepared 
+         * statement. It does NOT contain the WHERE keyword. Example:
+         * $clause = 'field=:parameter';
+         * @param mixed[] $parameter_map - Associative array, where keys are
+         * named parameter placeholders and values are parameters from the 
+         * query to be performed. Illustration of how this array should look 
+         * for a given WHERE clause: 
+         * $clase = 'field1=:par1 AND field2=:par2';
+         * $parameter_map = [
+         *     ':par1'=>value_of_par1,
+         *     ':par2'=>value_of_par2
+         *];
+         */
+        public function delete($table, $clause, Array $parameter_map) {
+            $format = "DELETE FROM %s WHERE {$clause}";
+            $query = sprintf($format,$table);
             $prep = $this->conn->prepare($query);
             foreach ($parameter_map as $key => $value) {
                 $prep->bindValue($key, $value);
