@@ -51,8 +51,8 @@ class DatabaseTest extends TestCase {
         $outcome = $crude_outcome[0]['content'];
         $expected_outcome = 'I like it!';
         $this->assertTrue($outcome==$expected_outcome);
-        $clause = 'user=:user';
-        $clause_pars = [':user'=>'nancy'];
+        $clause = 'user=:user AND id=:id';
+        $clause_pars = [':user'=>'nancy',':id'=>2];
         $crude_outcome = $db->select($this->table,$fields,$clause,$clause_pars);
         $outcome = $crude_outcome[0]['content'];
         $expected_outcome = 'I like it!';
@@ -70,6 +70,17 @@ class DatabaseTest extends TestCase {
         $db->update($this->table,$fields,$clause,$map);
         $queryTable = $this->getConnection()->createQueryTable($this->table,"SELECT * FROM {$this->table}");
         $expectedTable = $this->createFlatXmlDataSet(dirname(__FILE__).'/expectedUpdate.xml')
+                              ->getTable($this->table);
+        $this->assertTablesEqual($expectedTable, $queryTable);
+    }
+
+    public function testDelete() {
+        $clause = 'id=:id AND user=:user';
+        $map = [':id'=>1, ':user'=>'joe'];
+        $db = new Database();
+        $db->delete($this->table,$clause,$map);
+        $queryTable = $this->getConnection()->createQueryTable($this->table,"SELECT * FROM {$this->table}");
+        $expectedTable = $this->createFlatXmlDataSet(dirname(__FILE__).'/expectedDelete.xml')
                               ->getTable($this->table);
         $this->assertTablesEqual($expectedTable, $queryTable);
     }
