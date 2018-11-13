@@ -79,7 +79,7 @@
     		$table = 'messages';
     		$fields = ['*'];
     		$clause = '(sender_id=:id_1 AND recipient_id=:id_2) OR (sender_id=:id_2 AND recipient_id=:id_1)';
-    		$map = [':id1'=>$id_1, ':id2'=>$id_2];
+    		$map = [':id_1'=>$id_1, ':id_2'=>$id_2];
     		$messages = $this->DB->select($table,$fields,$clause,$map);
     		return json_encode($messages);
     	}
@@ -120,13 +120,12 @@
     	}
 
     	public function fetch_id_of_last_received_message($user_id) {
-    		$query = "SELECT MAX(message_id) FROM messages WHERE recipient_id = $this->id";
     		$table = 'messages';
     		$fields = ['MAX(message_id)'];
     		$clause = 'recipient_id = :id';
     		$map = [':id'=>$user_id];
     		$result = $this->DB->select($table,$fields,$clause,$map);
-    		$last_mes_id = $result[0]['message_id'];
+    		$last_mes_id = $result[0]['MAX(message_id)'];
     		return $last_mes_id;
     	}
 
