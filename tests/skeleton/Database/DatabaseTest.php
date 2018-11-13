@@ -32,7 +32,6 @@ class DatabaseTest extends TestCase {
     public function testInsert() {
         $fields = ['id','content','user','created'];
         $values = [3,'test','yegor','now'];
-        //$db = new Database();
         $this->db->insert($this->table,$fields,$values);
         $queryTable = $this->conn->createQueryTable($this->table,"SELECT * FROM {$this->table}");
         $expectedTable = $this->createFlatXmlDataSet(dirname(__FILE__).'/expectedInsert.xml')
@@ -42,7 +41,6 @@ class DatabaseTest extends TestCase {
 
     public function testSelect() {
         $fields = ['*'];
-        //$db = new Database();
         $outcome = $this->db->select($this->table,$fields);
         $expected_outcome = [
             ['id'=>1, 'content'=>'Hello buddy!', 'user'=>'joe', 'created'=>'2010-04-24 17:15:23'],
@@ -71,7 +69,6 @@ class DatabaseTest extends TestCase {
             ':id'=>1, ':user'=>'joe', ':content'=>'UPDATED', 
             ':created'=>'right now'
         ];
-        //$db = new Database();
         $this->db->update($this->table,$fields,$clause,$map);
         $queryTable = $this->conn->createQueryTable($this->table,"SELECT * FROM {$this->table}");
         $expectedTable = $this->createFlatXmlDataSet(dirname(__FILE__).'/expectedUpdate.xml')
@@ -82,7 +79,6 @@ class DatabaseTest extends TestCase {
     public function testDelete() {
         $clause = 'id=:id AND user=:user';
         $map = [':id'=>1, ':user'=>'joe'];
-        //$db = new Database();
         $this->db->delete($this->table,$clause,$map);
         $queryTable = $this->conn->createQueryTable($this->table,"SELECT * FROM {$this->table}");
         $expectedTable = $this->createFlatXmlDataSet(dirname(__FILE__).'/expectedDelete.xml')
