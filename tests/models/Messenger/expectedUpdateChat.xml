@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<dataset>
+    <chats chat_id="1" chat_key="3" participant1_id="1" participant2_id="2" participant1_name="User1" participant2_name="User2" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Miten menee???" last_mes_ts="##fixture_time##" />
+    <chats chat_id="2" chat_key="5" participant1_id="1" participant2_id="4" participant1_name="User1" participant2_name="Test1" last_mes_auth_id="4" last_mes_auth_name="Test1" last_mes_text="Let's do it" last_mes_ts="##time##" />
+</dataset>

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<dataset>
+	<messages message_id="1" recipient_id="2" recipient_name="User2" sender_id="1" sender_name="User1" message="Moi:)" ts="##fixture_time##" />
+	<messages message_id="2" recipient_id="1" recipient_name="User1" sender_id="2" sender_name="User2" message="Terveee:)" ts="##fixture_time##" />
+	<messages message_id="3" recipient_id="2" recipient_name="User2" sender_id="1" sender_name="User1" message="Miten menee???" ts="##fixture_time##" />
+    <messages message_id="4" recipient_id="4" recipient_name="Test1" sender_id="1" sender_name="User1" message="Let's test something" ts="##fixture_time##" />
+    <messages message_id="5" recipient_id="7" recipient_name="Test4" sender_id="6" sender_name="Test3" message="Hello!" ts="##time_1##" />
+    <messages message_id="6" recipient_id="6" recipient_name="Test3" sender_id="7" sender_name="Test4" message="Hi" ts="##time##" />
+    <chats chat_id="1" chat_key="3" participant1_id="1" participant2_id="2" participant1_name="User1" participant2_name="User2" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Miten menee???" last_mes_ts="##fixture_time##" />
+    <chats chat_id="2" chat_key="5" participant1_id="1" participant2_id="4" participant1_name="User1" participant2_name="Test1" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Let's test something" last_mes_ts="##fixture_time##" />
+    <chats chat_id="3" chat_key="13" participant1_id="6" participant2_id="7" participant1_name="Test3" participant2_name="Test4" last_mes_auth_id="7" last_mes_auth_name="Test4" last_mes_text="Hi" last_mes_ts="##time##" />
+</dataset>
