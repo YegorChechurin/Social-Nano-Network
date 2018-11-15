@@ -1,14 +1,14 @@
 <?php 
 
     use Skeleton\RequestHandling\Request;
-    use Models\User;
-
-    require_once '../skeleton/db_con.php';
+    use Skeleton\Database\Database;
+    use Models\Messenger;
     
     $request = new Request();
     $user_id = $request->uri[2];
-    $user = new User($user_id,$conn);
-    $chats = $user->fetch_chats();
+    $db = new Database();
+    $messenger = new Messenger($db);
+    $chats = $messenger->fetch_user_chats($user_id);
     echo $chats;
     
 ?>

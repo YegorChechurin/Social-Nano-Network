@@ -1,16 +1,15 @@
 <?php 
 
     use Skeleton\RequestHandling\Request;
-    use Models\User;
+    use Skeleton\Database\Database;
+    use Models\Messenger;
 
-    require_once '../skeleton/db_con.php';
-
-    function long_polling(User $user, $message_id, $timestamp) {
+    function long_polling(Messenger $messenger, $user_id, $message_id, $timestamp) 
+    {
         $start = $timestamp;
         $finish = $start + 20;
-        $messages_raw = $user->fetch_received_messages($message_id);
-        if ($messages_raw) {
-            $messages = json_encode($messages_raw);
+        $messages = $messenger->fetch_received_messages($user_id,$message_id);
+        if ($messages) {
             echo $messages;
         } else {
             sleep(5);
@@ -18,7 +17,7 @@
             if ($current > $finish) {
                 exit;
             } else {
-                long_polling($user,$message_id,$start);
+                long_polling($messenger,$user_id,$message_id,$start);
             }
         }
     }
@@ -26,9 +25,9 @@
     $request = new Request();
     $user_id = $request->uri[2]; 
     $message_id = $request->uri[4]; 
-    $user = new User($user_id,$conn);
-    
+    $db = new Database();
+    $messenger = new Messenger($db);
     $ts = time();
-    long_polling($user,$message_id,$ts);
+    long_polling($messenger,$user_id,$message_id,$ts);
       
 ?>

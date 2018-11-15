@@ -1,9 +1,8 @@
 <?php 
 
     use Skeleton\RequestHandling\Request;
-    use Models\Message;
-
-    require_once '../skeleton/db_con.php';
+    use Skeleton\Database\Database;
+    use Models\Messenger;
 
     $request = new Request();
     $mes_info = array();
@@ -12,6 +11,8 @@
     $mes_info['recipient_id'] = $request->POST['partner_id'];
     $mes_info['recipient_name'] = $request->POST['partner_name'];
     $mes_info['message'] = $request->POST['message'];
-    Message::postMessage($conn,$mes_info);
+    $db = new Database();
+    $messenger = new Messenger($db);
+    $messenger->send_message($mes_info);
     
 ?>
