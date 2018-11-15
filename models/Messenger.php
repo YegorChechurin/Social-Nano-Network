@@ -187,7 +187,11 @@
     		$clause = 'recipient_id=:user_id AND message_id>:message_id ORDER BY message_id';
     		$map = [':user_id'=>$user_id,':message_id'=>$message_id];
     		$messages = $this->DB->select($table,$fields,$clause,$map);
-    		return json_encode($messages);
+    		if ($messages) {
+    			return json_encode($messages);
+    		} else {
+    			return 0;
+    		}
     	}
 
     	/**
@@ -205,7 +209,11 @@
     		$clause = 'recipient_id = :id';
     		$map = [':id'=>$user_id];
     		$result = $this->DB->select($table,$fields,$clause,$map);
-    		$last_mes_id = $result[0]['MAX(message_id)'];
+    		if ($result) {
+    			$last_mes_id = $result[0]['MAX(message_id)'];
+    		} else {
+    			$last_mes_id = 0;
+    		}
     		return $last_mes_id;
     	}
 
