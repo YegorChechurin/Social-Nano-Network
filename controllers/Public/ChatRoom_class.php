@@ -3,19 +3,19 @@
     namespace Controllers\Pub;
     use Controllers\Pub\PublicController;
     use Skeleton\RequestHandling\Request;
-    use Models\User;
-    
-    require_once '../skeleton/db_con.php';
+    use Models\UserFactory;
+    use Models\ServiceFactory;
 
     class ChatRoom extends PublicController {
 
-        public function get_view_data($conn) {
+        public function get_view_data(UserFactory $user_factory,ServiceFactory $service_factory) {
 
             $request = new Request();
             $data['user_id'] = $request->uri[2];
-            $user = new User($data['user_id'],$conn);
+            $user = $user_factory->make_user($data['user_id']);
             $data['user_name'] = $user->showName();
-            $data['last_rec_mes_id'] = $user->getLast();
+            $messenger = $service_factory->make_service_instance('Messenger');
+            $data['last_rec_mes_id'] = $messenger->fetch_id_of_last_received_message($data['user_id']);
 
             if ($request->POST) {
                 $data['active_id'] = $request->POST['fr_id'];
