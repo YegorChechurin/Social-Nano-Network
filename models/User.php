@@ -15,7 +15,7 @@
 	   public function __construct($us_id,$database) {
 		   $this->id = $us_id;
 		   $this->DB = $database;
-           $this->name = $this->fetchName();
+           $this->fetchName();
  	   }
 	   
 	   public function showID() {
