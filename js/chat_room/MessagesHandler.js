@@ -148,8 +148,8 @@ function MessagesHandler() {
         	chats.forEach(
         		function(chat) {
         			if (message.sender_id==chat.partner_id || message.recipient_id==chat.partner_id) {
-        				chat.last_mes_auth_id = user_id;
-        				chat.last_mes_auth_name = user_name;
+        				chat.last_mes_auth_id = message.sender_id;
+        				chat.last_mes_auth_name = message.sender_name;
         				chat.last_mes_text = message.message;
         				var date = new Date();
                         var t = date.getTime();
