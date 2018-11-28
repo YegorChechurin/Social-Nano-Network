@@ -23,6 +23,9 @@
     		$this->DB = $database;
     	}
 
+        public function make_friendship($id_1,$id_2) {
+            // check whether the friendship already exists, if not, post a new friendship 
+        }
     	
     }
 
