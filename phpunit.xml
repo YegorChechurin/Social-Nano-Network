@@ -11,5 +11,9 @@
             <directory>tests/models/Messenger</directory>
             <file>tests/models/Messenger/MessengerTest.php</file>
         </testsuite>
+        <testsuite name="factories">
+            <directory>tests/models/Factories</directory>
+            <file>tests/models/Factories/FactoriesTest.php</file>
+        </testsuite>
     </testsuites>
 </phpunit>
