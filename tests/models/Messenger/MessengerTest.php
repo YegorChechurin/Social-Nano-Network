@@ -19,8 +19,6 @@ class MessengerTest extends TestCase {
 
     private $M;
 
-    private $fixture_time;
-
     public function getConnection() {  
         $db = new Database();
         $this->M = new Messenger($db); 
@@ -176,7 +174,6 @@ class MessengerTest extends TestCase {
     }
 
     public function testFetchIDofLastReceivedMessage() {
-        $fixture_time = date("Y-m-d H:i:s");
         $user_id = 2;
         $outcome = $this->M->fetch_id_of_last_received_message($user_id);
         $expected = 3;
