@@ -15,5 +15,9 @@
             <directory>tests/models/Factories</directory>
             <file>tests/models/Factories/FactoriesTest.php</file>
         </testsuite>
+        <testsuite name="friendship">
+            <directory>tests/models/FriendBroker</directory>
+            <file>tests/models/FriendBroker/FriendBrokerTest.php</file>
+        </testsuite>
     </testsuites>
 </phpunit>
