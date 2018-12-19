@@ -56,9 +56,9 @@ class FriendBrokerTest extends TestCase {
         var_dump($result->fetchAll());*/
     }
 
-    public function testFetchFriendInfo() {
+    public function testFetchAllFriends() {
     	$user_id = 1;
-    	$friend_info = $this->FB->fetch_friend_info($user_id);
+    	$friend_info = $this->FB->fetch_all_friends($user_id);
     	$expected_result = [
     		['friend_id'=>'2','friend_name'=>'User2'],
     		['friend_id'=>'4','friend_name'=>'Test1'],

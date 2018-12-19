@@ -49,7 +49,7 @@
             } 
         }
 
-        public function fetch_friend_info($user_id) {
+        public function fetch_all_friends($user_id) {
             /*$fields = ['users.user_id','users.username'];
             $clause = 'INNER JOIN users ON users.user_id=friends.fr_id WHERE friends.friendship_id=array_containing_list_of_IDs';*/
 
