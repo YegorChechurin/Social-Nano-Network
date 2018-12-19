@@ -89,6 +89,19 @@
             return $result;
         }
 
+        public function perform_custom_select($table, Array $fields, $clause_exp, Array $clause_pars) {
+            $format = "SELECT %s FROM %s {$clause_exp}";
+            $fields = implode(',',$fields);
+            $query = sprintf($format,$fields,$table);
+            $prep = $this->conn->prepare($query);
+            foreach ($clause_pars as $key => $value) {
+                $prep->bindValue($key, $value);
+            }
+            $prep->execute();
+            $result = $prep->fetchAll(\PDO::FETCH_ASSOC);
+            return $result;
+        }
+
         /**
          * Performs UPDATE sql operation by means of PDO prepared statement
          *
