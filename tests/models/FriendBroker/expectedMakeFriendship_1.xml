@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<dataset>
+	<friends friendship_id="1" friend1_id="1" friend2_id="2" friend1_name="User1" friend2_name="User2" />
+	<friends friendship_id="2" friend1_id="1" friend2_id="4" friend1_name="User1" friend2_name="Test1" />
+	<friends friendship_id="3" friend1_id="5" friend2_id="1" friend1_name="Test2" friend2_name="User1" />
+</dataset>
