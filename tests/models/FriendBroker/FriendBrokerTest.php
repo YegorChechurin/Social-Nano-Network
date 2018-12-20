@@ -50,10 +50,15 @@ class FriendBrokerTest extends TestCase {
         $actual_dataset = $this->conn->createDataset($this->tables);
         $expected_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedMakeFriendship_2.xml');
         $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
+    }
 
-        /*$pdo = new PDO(DSN,USER,PASSWORD);
-        $result = $pdo->query('call test()');
-        var_dump($result->fetchAll());*/
+    public function testDeleteFriendship() {
+    	$id_1 = 1;
+    	$id_2 = 5;
+    	$this->FB->delete_friendship($id_1,$id_2);
+        $actual_dataset = $this->conn->createDataset($this->tables);
+        $expected_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedDeleteFriendship.xml');
+        $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
     }
 
     public function testFetchAllFriends() {
