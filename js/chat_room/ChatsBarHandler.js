@@ -136,7 +136,7 @@ function ChatsBarHandler(){
      * @param {string} partner_name - Name of chat partner.
      */
 	var display_chat = function(partner_id,partner_name){
-		n = 0;
+		number_of_messages_displayed = 0;
         active_id = partner_id;  
         active_name = partner_name;
         $.get("http://localhost/SNN/ajax/"+user_id+"/chat/"+partner_id, 
@@ -146,15 +146,19 @@ function ChatsBarHandler(){
                     var messages = JSON.parse(data);
                     messages.forEach(
                         function(message) {
-                            n++;
+                            number_of_messages_displayed++;
                             if (message.sender_id == user_id) {
-                                var content = '<div class="message_outlet" id="m'+n+'"><b>You:</b> '+message.message+'</div><br>';
+                                var content = '<div class="message_outlet" id="m'
+                                + number_of_messages_displayed +
+                                '"><b>You:</b> '+message.message+'</div><br>';
                                 $("#mes").append(content);
                             } else {
-                                var content = '<div class="message_inlet" id="m'+n+'"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
+                                var content = '<div class="message_inlet" id="m'
+                                + number_of_messages_displayed +
+                                '"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
                                 $("#mes").append(content);
                             }
-                            var last_mes_pos = document.getElementById("m"+n).offsetTop;
+                            var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
                             if (last_mes_pos > mes_height) {
                                 document.getElementById("mes").scrollTop = last_mes_pos; 
                             }

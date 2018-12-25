@@ -22,8 +22,8 @@
 	   </div>
 		<div class="col-sm-6 d-none d-sm-block" id="mes">    
         </div>
-		<!--<div class="col-sm-3 d-none d-sm-block" id="sidebar">-->
-        <div class="col-sm-3" id="sidebar">
+		<div class="col-sm-3 d-none d-sm-block" id="sidebar">
+        <!--<div class="col-sm-3" id="sidebar">-->
             <div style="text-align: center; padding-top:5%">
 		       If you would like to chat to someone with whom you do not have an active chat yet, then please go to your profile page by clicking your username in the left uppermost corner of the page, and then select that person from your friend list.
 		    </div>
@@ -81,7 +81,7 @@
      * This is a counter needed to count how many messages is displayed in "mes". It is used as a part of each message HTML id in order to track position of the last displayed message and to scroll "mes" element accordingly. 
      * @type {number}
      */
-    var n; 
+    var number_of_messages_displayed; 
 
     /** 
      * Array of chat objects. Each chat object contains 
