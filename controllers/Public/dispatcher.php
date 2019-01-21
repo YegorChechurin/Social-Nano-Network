@@ -2,12 +2,12 @@
 
    $endpoints = array(
          array('method'=>'GET', 
-            'uri'=>'%public/[0-9]+/messenger%', 
+            'uri'=>'%public/[0-9]+/messenger(\?.*)?%', 
             'controller'=>'Public/chat_room.php'
          ),
          array('method'=>'GET', 
-            'uri'=>'%public/test%', 
-            'controller'=>'Public/test.php'
+            'uri'=>'%public/[0-9]+/profile%', 
+            'controller'=>'Public/profile_page.php'
          )
    );
 
