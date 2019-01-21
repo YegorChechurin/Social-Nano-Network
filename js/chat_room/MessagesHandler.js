@@ -58,15 +58,19 @@ function MessagesHandler() {
      */
 	this.display_message = function(message){
 		if (active_id && (message.sender_id==active_id || message.recipient_id==active_id)) {
-            n++;
+            number_of_messages_displayed++;
             if (message.sender_id == user_id) {
-                var content = '<div class="message_outlet" id="m'+n+'"><b>You:</b> '+message.message+'</div><br>';
+                var content = '<div class="message_outlet" id="m'
+                + number_of_messages_displayed +
+                '"><b>You:</b> '+message.message+'</div><br>';
                 $("#mes").append(content);
             } else {
-                var content = '<div class="message_inlet" id="m'+n+'"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
+                var content = '<div class="message_inlet" id="m'
+                + number_of_messages_displayed +
+                '"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
                 $("#mes").append(content);
             }
-            var last_mes_pos = document.getElementById("m"+n).offsetTop;
+            var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
             if (last_mes_pos > mes_height) {
                 document.getElementById("mes").scrollTop = last_mes_pos; 
             }
@@ -145,6 +149,7 @@ function MessagesHandler() {
      */
 	var update_chats = function(message) {
 		if (chats) {
+            var counter = 0;
         	chats.forEach(
         		function(chat) {
         			if (message.sender_id==chat.partner_id || message.recipient_id==chat.partner_id) {
@@ -154,9 +159,31 @@ function MessagesHandler() {
         				var date = new Date();
                         var t = date.getTime();
         				chat.last_mes_ts = t;
-        			}
+                        counter = counter + 1;
+        			} 
         		}
         	);
+            if (counter==0) {
+                var new_chat = {
+                    partner_id : message.sender_id,
+                    partner_name : message.sender_name,
+                    last_mes_auth_id : message.sender_id,
+                    last_mes_auth_name : message.sender_name,
+                    last_mes_text : message.message,
+                    last_mes_ts : Date.parse(message.ts)
+                };
+                chats.push(new_chat);
+            }
+        } else {
+            var new_chat = {
+                partner_id : message.sender_id,
+                partner_name : message.sender_name,
+                last_mes_auth_id : message.sender_id,
+                last_mes_auth_name : message.sender_name,
+                last_mes_text : message.message,
+                last_mes_ts : Date.parse(message.ts)
+            };
+            chats = [new_chat];
         }
 	}
 

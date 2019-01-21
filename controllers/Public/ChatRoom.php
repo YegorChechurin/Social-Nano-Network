@@ -17,9 +17,18 @@
             $messenger = $service_factory->make_service_instance('Messenger');
             $data['last_rec_mes_id'] = $messenger->fetch_id_of_last_received_message($data['user_id']);
 
-            if ($request->POST) {
+            /*if ($request->POST) {
                 $data['active_id'] = $request->POST['fr_id'];
                 $data['active_name'] = $request->POST['fr_name'];
+            } else {
+                $data['active_id'] = 0;
+                $data['active_name'] = '';
+            }*/
+
+            if ($request->query_string) {
+                parse_str($request->query_string,$partner);
+                $data['active_id'] = $partner['id'];
+                $data['active_name'] = $partner['name'];
             } else {
                 $data['active_id'] = 0;
                 $data['active_name'] = '';

@@ -71,10 +71,10 @@
          * it does, deletes corresponding record from the appropriate table, thus
          * removing the friendship.
          *
-         * @param integer $id_1 - User id of the user who has initiated the 
-         * friendship (clicked the add to friends button).
-         * @param integer $id_2 - User id of the user who has been added to 
-         * friends.
+         * @param integer $id_1 - User id of the user who is intitating the end
+         * of the friendship.
+         * @param integer $id_2 - User id of the user who has been removed from 
+         * friends by user with user id $id_1.
          */
         public function delete_friendship($id_1,$id_2) {
             $fields = ['friendship_id'];
@@ -123,7 +123,7 @@
                     }
                     $n++;
                 }
-                return $friend_info;
+                return json_encode($friend_info);
             } else {
                 return 0;
             }
@@ -173,13 +173,23 @@
             }
         }
 
+        /**
+         * Fetches friendship id of the most recently established friendship 
+         * connection by a particular user
+         *
+         * @param integer $user_id - User id of the user for whom friendship id
+         * of the most recently established friendship connection is fetched.
+         *
+         * @return integer - Zero if user has no friendship connections, otherwise 
+         * friendship id of the most recently established friendship connection.
+         */
         public function fetch_last_friendship_id($user_id) {
             $fields = ['MAX(friendship_id)'];
             $clause = 'friend1_id=:id OR friend2_id=:id';
             $map = [':id'=>$user_id];
             $result = $this->DB->select($this->table,$fields,$clause,$map);
-            $last_friendship_id = $result[0]['MAX(friendship_id)'];
-            if ($last_friendship_id) {
+            if ($result) {
+                $last_friendship_id = $result[0]['MAX(friendship_id)'];
                 return $last_friendship_id;
             } else {
                 return 0;
