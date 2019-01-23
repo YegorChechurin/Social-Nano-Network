@@ -1,6 +1,7 @@
 #chats_wrapper {
+				border-right: 1px solid black;
 			    overflow: auto; 
-			    /*height: 55%;*/
+			    height: 100%;
 			    /*margin-top: 15%;*/
 			  }
 .active_chat_header {
