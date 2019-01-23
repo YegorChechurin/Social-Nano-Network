@@ -188,8 +188,8 @@
             $clause = 'friend1_id=:id OR friend2_id=:id';
             $map = [':id'=>$user_id];
             $result = $this->DB->select($this->table,$fields,$clause,$map);
-            if ($result) {
-                $last_friendship_id = $result[0]['MAX(friendship_id)'];
+            $last_friendship_id = $result[0]['MAX(friendship_id)'];
+            if ($last_friendship_id) {  
                 return $last_friendship_id;
             } else {
                 return 0;

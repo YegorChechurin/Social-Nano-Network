@@ -178,6 +178,10 @@ class MessengerTest extends TestCase {
         $outcome = $this->M->fetch_id_of_last_received_message($user_id);
         $expected = 3;
         $this->assertTrue($expected==$outcome);
+        $user_id = 3;
+        $outcome = $this->M->fetch_id_of_last_received_message($user_id);
+        $expected = 0;
+        $this->assertTrue($expected==$outcome);
     }
 
 }

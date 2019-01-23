@@ -28,74 +28,47 @@ function ChatsBarHandler(){
 		$.get("http://localhost/SNN/ajax/"+user_id+"/chats", 
             function(data, status){
                 if (status=="success") {
-                    /*chats = JSON.parse(data);
+                    chats = JSON.parse(data);
                     if (chats) {
                         chats.forEach(convert_chat_last_mes_ts);
-                        chats.forEach(form_chat_header);
                         var ts = chats[0].last_mes_ts;
                         Cookies.set('last_mes_ts', ts, {expires:365});
-                    }
-                }
-                if (active_id && active_name) {
-                    display_chat(active_id,active_name);
-                    var partner_IDs = [];
-                    chats.forEach(function(chat){
-                        partner_IDs.push(chat.partner_id);
-                    });
-                    if (!partner_IDs.includes(active_id)) {
-                        var chat = {
-                            partner_id : active_id,
-                            partner_name : active_name,
-                            last_mes_auth_id : 0,
-                            last_mes_auth_name : user_name,
-                            last_mes_text : '',
-                            last_mes_ts : 0 //Cookies.getJSON('last_mes_ts') + 1
-                        };
-                        chats.splice(0,0,chat);
-                        form_chat_header(chat);
-                    }
-                }*/
-                chats = JSON.parse(data);
-                if (chats) {
-                chats.forEach(convert_chat_last_mes_ts);
-                var ts = chats[0].last_mes_ts;
-                Cookies.set('last_mes_ts', ts, {expires:365});
-                var partner_IDs = [];
-                chats.forEach(function(chat){
-                    partner_IDs.push(chat.partner_id);
-                });
-                if (active_id && active_name) {
-                    if (!partner_IDs.includes(active_id)) {
-                        var chat = {
-                            partner_id : active_id,
-                            partner_name : active_name,
-                            last_mes_auth_id : 0,
-                            last_mes_auth_name : user_name,
-                            last_mes_text : '',
-                            last_mes_ts : 0 
-                        };
-                        chats.splice(0,0,chat);
-                    } else {
-                        display_chat(active_id,active_name);
-                    }
-                }
-                chats.forEach(form_chat_header);
-                } else {
-                    if (active_id && active_name) {
-                        var chat = {
-                            partner_id : active_id,
-                            partner_name : active_name,
-                            last_mes_auth_id : 0,
-                            last_mes_auth_name : user_name,
-                            last_mes_text : '',
-                            last_mes_ts : 0 
-                        };
-                        chats = [chat];
+                        var partner_IDs = [];
+                        chats.forEach(function(chat){
+                            partner_IDs.push(chat.partner_id);
+                        });
+                        if (active_id && active_name) {
+                            if (!partner_IDs.includes(active_id)) {
+                                var chat = {
+                                    partner_id : active_id,
+                                    partner_name : active_name,
+                                    last_mes_auth_id : 0,
+                                    last_mes_auth_name : user_name,
+                                    last_mes_text : '',
+                                    last_mes_ts : 0 
+                                };
+                                chats.splice(0,0,chat);
+                            } else {
+                                display_chat(active_id,active_name);
+                            }
+                        }
                         chats.forEach(form_chat_header);
+                    } else {
+                        if (active_id && active_name) {
+                            var chat = {
+                                partner_id : active_id,
+                                partner_name : active_name,
+                                last_mes_auth_id : 0,
+                                last_mes_auth_name : user_name,
+                                last_mes_text : '',
+                                last_mes_ts : 0 
+                            };
+                            chats = [chat];
+                            chats.forEach(form_chat_header);
+                        }
                     }
                 }
             }
-        }
         );
 	}
     

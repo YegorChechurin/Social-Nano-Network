@@ -209,12 +209,13 @@
     		$clause = 'recipient_id = :id';
     		$map = [':id'=>$user_id];
     		$result = $this->DB->select($table,$fields,$clause,$map);
-    		if ($result) {
-    			$last_mes_id = $result[0]['MAX(message_id)'];
-    		} else {
-    			$last_mes_id = 0;
-    		}
-    		return $last_mes_id;
+            $last_rec_mes_id = $result[0]['MAX(message_id)'];
+            if ($last_rec_mes_id) {
+                return $last_rec_mes_id;
+            } else {
+                return 0;
+            }
+            
     	}
 
     }

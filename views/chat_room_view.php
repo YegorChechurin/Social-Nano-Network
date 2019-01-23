@@ -69,7 +69,7 @@
      * received message by the user.
      * @type {number}
      */
-    var last_rec_mes_id = <?=$data['last_rec_mes_id']?>;
+    var last_rec_mes_id = <?=$data['last_rec_mes_id']?>; 
 
     /** 
      * Height of the HTML element with id "mes". It is the element where all the messages of a particular chat are displayed. We need to know its height in order to dispay messages in such a way so that "mes" scrolls when it becomes full and the last message is always displayed in the right place. 
