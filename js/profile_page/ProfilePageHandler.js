@@ -53,6 +53,15 @@ function ProfilePageHandler() {
         $('#remove_'+id).click(function(){
         	remove_friend(friend);
         });
+        var href = 'http://localhost/SNN/public/'+user_id+'/messenger';
+        var query_string = '?id='+friend.friend_id+'&name='+friend.friend_name;
+        var url = href + query_string;
+        var messenger_button = $('<button></button>').text('Send message');
+        messenger_button.click(function(){
+        	window.open(url,'_self');
+        	//window.open(url,"myWindow","width=500,height=700");
+        });
+        $("#"+id).append(messenger_button);
 	}
 
 	var form_user_element = function(user) {
