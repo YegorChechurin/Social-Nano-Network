@@ -27,6 +27,9 @@ events_map =
     }]
 },
 {
-    "event":"chat_room_load",
-    "handling":[{}]
+    "event":"friend_data",
+    "handling":[{
+        "handler":"FriendsHandler",
+        "method":"handle_friend_data"
+    }]
 }]
