@@ -66,9 +66,9 @@ class FriendBrokerTest extends TestCase {
     	$friend_info = $this->FB->fetch_all_friends($user_id);
     	$expected_result = json_encode(
             [
-                ['friend_id'=>'2','friend_name'=>'User2'],
-                ['friend_id'=>'4','friend_name'=>'Test1'],
-                ['friend_id'=>'5','friend_name'=>'Test2']
+                ['friendship_id'=>'1','friend_id'=>'2','friend_name'=>'User2'],
+                ['friendship_id'=>'2','friend_id'=>'4','friend_name'=>'Test1'],
+                ['friendship_id'=>'3','friend_id'=>'5','friend_name'=>'Test2']
             ]
         );
     	$this->assertEquals($friend_info,$expected_result);

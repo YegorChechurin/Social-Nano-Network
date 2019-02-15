@@ -103,10 +103,7 @@
          * the user has, namely friendship id, friend user id and name. 
          */
         public function fetch_all_friends($user_id) {
-            $fields = [
-                    'friend1_id','friend2_id',
-                    'friend1_name','friend2_name'
-                ];
+            $fields = ['*'];
             $clause = 'friend1_id=:id OR friend2_id=:id';
             $map = [':id'=>$user_id];
             $all_info = $this->DB->select($this->table,$fields,$clause,$map);
@@ -114,6 +111,7 @@
                 $friend_info = [];
                 $n = 0;
                 foreach ($all_info as $info_unit) {
+                    $friend_info[$n]['friendship_id'] = $info_unit['friendship_id'];
                     if ($info_unit['friend1_id'] == $user_id) {
                         $friend_info[$n]['friend_id'] = $info_unit['friend2_id'];
                         $friend_info[$n]['friend_name'] = $info_unit['friend2_name'];
