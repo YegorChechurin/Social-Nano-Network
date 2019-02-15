@@ -47,16 +47,17 @@ function ProfilePageHandler() {
 
 	var form_friend_element = function(friend) {
 		var id = 'f'+friend.friend_id; 
-        $("#friends").append('<div id="'+id+'"></div>');
-        $("#"+id).append('<div>'+friend.friend_name+'</div>');
-        $("#"+id).append('<button id="'+'remove_'+id+'">Remove from friends</button>');
+        $("#friends").append('<div class="element" id="'+id+'"></div>');
+        $("#"+id).append('<div class="text">'+friend.friend_name+'</div>');
+        $("#"+id).append('<button class="btn btn-info" id="'+'remove_'+id+
+        	'">Remove from friends</button>');
         $('#remove_'+id).click(function(){
         	remove_friend(friend);
         });
         var href = 'http://localhost/SNN/public/'+user_id+'/messenger';
         var query_string = '?id='+friend.friend_id+'&name='+friend.friend_name;
         var url = href + query_string;
-        var messenger_button = $('<button></button>').text('Send message');
+        var messenger_button = $('<button class="btn btn-info"></button>').text('Send message');
         messenger_button.click(function(){
         	window.open(url,'_self');
         	//window.open(url,"myWindow","width=500,height=700");
@@ -66,9 +67,10 @@ function ProfilePageHandler() {
 
 	var form_user_element = function(user) {
 		var id = 'u'+user.user_id; 
-        $("#inventory").append('<div id="'+id+'"></div>');
-        $("#"+id).append('<div>'+user.username+'</div>');
-        $("#"+id).append('<button id="'+'add_'+id+'">Add to friends</button>');
+        $("#inventory").append('<div class="element" id="'+id+'"></div>');
+        $("#"+id).append('<div class="text">'+user.username+'</div>');
+        $("#"+id).append('<button class="btn btn-info" id="'+'add_'+id+
+        	'">Add to friends</button>');
         $('#add_'+id).click(function(){
         	add_friend(user);
         });
@@ -78,7 +80,7 @@ function ProfilePageHandler() {
 		$.get("http://localhost/SNN/ajax/"+user_id+"/friend_removal/"+friend.friend_id, 
             function(data, status){
                 if (status=="success") {
-                	$("#f"+friend.friend_id).html('');
+                	$("#f"+friend.friend_id).remove();
                 	var user = {
 		        		user_id : friend.friend_id,
 		        		username : friend.friend_name
@@ -94,7 +96,7 @@ function ProfilePageHandler() {
 			+"?name1="+user_name+"&name2="+user.username, 
             function(data, status){
                 if (status=="success") {
-                	$("#u"+user.user_id).html('');
+                	$("#u"+user.user_id).remove();
                 	var friend = {
 		        		friend_id : user.user_id,
 		        		friend_name : user.username

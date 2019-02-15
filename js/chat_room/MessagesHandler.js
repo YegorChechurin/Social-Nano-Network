@@ -165,7 +165,7 @@ function MessagesHandler() {
         	);
             if (counter==0) {
                 var new_chat = {
-                    partner_id : message.sender_id,
+                    partner_id : parseInt(message.sender_id),
                     partner_name : message.sender_name,
                     last_mes_auth_id : message.sender_id,
                     last_mes_auth_name : message.sender_name,
@@ -173,10 +173,11 @@ function MessagesHandler() {
                     last_mes_ts : Date.parse(message.ts)
                 };
                 chats.push(new_chat);
+                update_friends(new_chat.partner_id);
             }
         } else {
             var new_chat = {
-                partner_id : message.sender_id,
+                partner_id : parseInt(message.sender_id),
                 partner_name : message.sender_name,
                 last_mes_auth_id : message.sender_id,
                 last_mes_auth_name : message.sender_name,
@@ -184,7 +185,12 @@ function MessagesHandler() {
                 last_mes_ts : Date.parse(message.ts)
             };
             chats = [new_chat];
+            update_friends(new_chat.partner_id);
         }
 	}
+
+    var update_friends = function(id) {
+        $('#f'+id).remove();
+    }
 
 } 

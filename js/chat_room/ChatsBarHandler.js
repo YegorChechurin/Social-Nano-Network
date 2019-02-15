@@ -7,6 +7,78 @@
  * a new message.
  */
 function ChatsBarHandler(){
+
+    var get_friends = function(){
+        $.get("http://localhost/SNN/ajax/"+user_id+"/all_friends", 
+            function(data, status){
+                if (status=="success") {
+                    friends = JSON.parse(data);
+                    if (friends) {
+                        var partner_IDs = [];
+                        if (chats) {
+                            chats.forEach(function(chat){
+                                partner_IDs.push(chat.partner_id);
+                            });
+                        }
+                        var counter = 0;
+                        friends.forEach(function(friend){
+                            var id = parseInt(friend.friend_id);
+                            if (!partner_IDs.includes(id)) {
+                                counter++;
+                                var block = $('<div id="f'+id+'" class="friend"></div>');
+                                block.html('Start chatting with '+'<b>'+friend.friend_name+'</b>');
+                                $('#friends').prepend(block);
+                                block.click(function(){
+                                    block.remove();
+                                    $("#mes").html('');
+                                    active_id = id;
+                                    active_name = friend.friend_name;
+                                    var chat = {
+                                        partner_id : active_id,
+                                        partner_name : active_name,
+                                        last_mes_auth_id : 0,
+                                        last_mes_auth_name : user_name,
+                                        last_mes_text : '',
+                                        last_mes_ts : 0 
+                                    };
+                                    if (chats) {
+                                        chats.splice(0,0,chat);
+                                    } else {
+                                        chats = [chat];
+                                    }
+                                    var pattern = /id="f[0-9]+"/;
+                                    var content = $('#sidebar').html();
+                                    if (!pattern.exec(content)) {
+                                        var text = $('<div style="text-align:center"></div>').
+                                        text(
+                                            'You have chats with all of your\
+                                             friends. If you would like to chat with some other\
+                                             Social Nano Network users, you have to add them to your\
+                                             friend list'
+                                        );
+                                        $('#sidebar').html(text);
+                                    }
+                                    $('#chats_wrapper').html('');
+                                    chats.forEach(form_chat_header);
+                                });
+                            }
+                        });
+                        if (counter==0) {
+                            var text = $('<div style="text-align:center"></div>').
+                            text(
+                                'You have chats with all of your\
+                                 friends. If you would like to chat with some other\
+                                 Social Nano Network users, you have to add them to your\
+                                 friend list'
+                            );
+                            $('#sidebar').html(text);
+                        }
+                    }
+                }
+            }
+        );
+    }
+
     /** 
      * Builds chats bar.
      *
@@ -68,6 +140,7 @@ function ChatsBarHandler(){
                         }
                     }
                 }
+                get_friends();
             }
         );
 	}
@@ -133,7 +206,7 @@ function ChatsBarHandler(){
         $("#"+id).click(function(){
             display_chat(chat.partner_id,chat.partner_name);
         });
-        $("#"+id).html('<b>'+chat.partner_name+'</b><br>'+
+        $("#"+id).html('<b class="text">'+chat.partner_name+'</b><br>'+
         chat.last_mes_auth_name+': '+chat.last_mes_text);
         $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
         var parsed_id = parseInt(chat.partner_id);
@@ -174,7 +247,7 @@ function ChatsBarHandler(){
         $.get("http://localhost/SNN/ajax/"+user_id+"/chat/"+partner_id, 
             function(data, status){
                 if (status=="success") {
-                    $("#mes").html('')
+                    $("#mes").html('');
                     var messages = JSON.parse(data);
                     messages.forEach(
                         function(message) {
