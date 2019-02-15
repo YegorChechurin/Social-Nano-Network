@@ -5,34 +5,33 @@
     <?php require '../views/setup.php' ?>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/events_map.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesListener.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/FriendsListener.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsBarHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/FriendsHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/Broker.js"></script>
-	<link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/chat_room/chat_room_style.css">
+	<link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/chat_room_style.css">
 </head>
 <body>
-<div class="container-fluid" style="padding-top:5%; height: 100vh;">
-    <div class="row" style="height: 10%;">
-        <div>Navbar</div>
+<div class="container-fluid" style="padding-top:0%; height: 100vh;">
+    <div class="row" id="navbar">
+        <div id="profile_link" class="text"></div>
     </div>
 	<div class="row" style="height: 60%;">
-        <div class="col-sm-3">
-            <div id="chats_wrapper">
-            </div>
-	   </div>
-		<div class="col-sm-6 d-none d-sm-block" id="mes">    
-        </div>
+        <div id="chats_wrapper" class="col-sm-3"></div>
+		<div class="col-sm-6 d-none d-sm-block" id="mes"></div>
 		<div class="col-sm-3 d-none d-sm-block" id="sidebar">
         <!--<div class="col-sm-3" id="sidebar">-->
-            <div style="text-align: center; padding-top:5%">
-		       If you would like to chat to someone with whom you do not have an active chat yet, then please go to your profile page by clicking your username in the left uppermost corner of the page, and then select that person from your friend list.
+            <div class="text" style="text-align: center; padding-top:5%">
+		       Friends you have no chats with:
 		    </div>
+            <div id="friends"></div>
 	    </div>
     </div>
 	  <div class="row justify-content-center" style="height: 30%;">
 		<div class="col-sm-6 d-none d-sm-block">
-				<textarea class="form-control" rows="4" id="text" name="message" placeholder="Type your message here:"></textarea>
-                <button type="button" id="send_button" class="btn btn-info">Send</button>
+				<textarea class="form-control" rows="4" id="text" name="message" placeholder="Type your message here:" style="width:100%;height:75%"></textarea>
+                <button type="button" id="send_button" class="btn btn-info" style="height:25%">Send</button>
 		</div>
 	  </div>
 </div>
@@ -71,6 +70,13 @@
      */
     var last_rec_mes_id = <?=$data['last_rec_mes_id']?>; 
 
+    /**
+     * Friendship id of the most recently (last) 
+     * established user's friendship connection.
+     * @type {number}
+     */
+    var last_friendship_id = <?=$data['last_friendship_id']?>;
+
     /** 
      * Height of the HTML element with id "mes". It is the element where all the messages of a particular chat are displayed. We need to know its height in order to dispay messages in such a way so that "mes" scrolls when it becomes full and the last message is always displayed in the right place. 
      * @type {number}
@@ -89,6 +95,13 @@
      * @type {Object[]}
      */
     var chats;
+    
+    /** 
+     * Array of user friends. Each friend is represented by an object which
+     * contains friend id and friend name.
+     * @type {Object[]}
+     */
+    var friends;
 
     /** 
      * Programming "send_button" so that it can send messages. Class "MessagesListener" is located in js/chat_room/MessagesListener.js 
@@ -102,6 +115,14 @@
 
     $(document).ready(
         function(){
+            /**
+             * Creating a link to user's profile page in the left corner of 
+             * navigation bar
+             */
+            var href = 'http://localhost/SNN/public/'+user_id+'/profile';
+            var profile_link = '<a href="'+href+'">My profile page</a>';
+            $('#profile_link').html(profile_link);
+
             /** 
              * Assembling chats bar located in "chats_wrapper" HTML element. Class "ChatsBarHandler" is located in js/chat_room/ChatsBarHandler.js 
              */
@@ -113,6 +134,12 @@
              */
             var l = new MessagesListener();
             l.listen_incoming_messages();
+
+            /** 
+             * Starting a listener which will be sending AJAX requests for new friends on a regular basis. 
+             */
+            var l = new FriendsListener();
+            l.listen_new_friends();
         }
     );
 </script>
