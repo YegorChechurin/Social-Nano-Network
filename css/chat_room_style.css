@@ -1,0 +1,135 @@
+#navbar {
+	height: 10%; 
+	/*background: linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);*/
+	background: linear-gradient(to bottom, #80b3ff, #eeccff, white);
+	border-bottom: 1px solid #a3c2c2;
+}
+
+.text {
+	color: white; 
+    text-shadow: 1px 1px 2px black, 0 0 25px blue, 0 0 5px darkblue;
+}
+
+#chats_wrapper {
+				border-right: 1px solid #a3c2c2;
+				border-bottom: 1px solid #a3c2c2;
+			    overflow: auto; 
+			    height: 100%;
+			    padding-left: 0;
+			    padding-right: 0;
+			  }
+.active_chat_header {
+	          position: relative;
+			  border-bottom: 1px solid black;
+			  width: 100%; 
+			  min-height: 20%; /*55px;*/
+			  overflow: hidden; 
+              cursor: pointer;
+			  color: pink;
+			  background-color: #6666ff;
+			  padding-left: 5px;
+		     }
+.chat_header {
+	          position: relative;
+			  border-bottom: 1px solid #a3c2c2;
+			  width: 100%; 
+			  min-height: 20%; /*55px;*/
+			  overflow: hidden; 
+              cursor: pointer;
+			  color: #00ccff;
+			  padding-left: 5px;
+			  z-index: 100;
+		     }
+.chat_header_unread {
+	          position: relative;
+			  border-bottom: 1px solid #a3c2c2; 
+			  width: 100%; 
+			  min-height: 20%; /*55px;*/
+			  overflow: hidden; 
+              cursor: pointer;
+			  color: #00ccff;
+			  background: linear-gradient(to right,#527a7a,white);
+			  padding-left: 5px;
+		     }
+.chat_header:hover  {
+	                 background: linear-gradient(to right,#ccffff,white); 
+			       }
+#mes {
+	  padding-top: 5px;
+	  overflow: auto;
+	  /*background-color: #ccffcc;*/
+	  border-right: 1px solid #a3c2c2;
+	  border-bottom: 1px solid #a3c2c2;
+	  background-image: url(http://localhost/SNN/images/communication.jpg);
+	  background-position: center;
+	  background-size: contain;
+    }
+/*#sidebar {
+	      height: 70%;
+	      background-color: #ffffe6
+        }*/
+@media only screen and (min-width: 600px) {
+	#sidebar {
+		  overflow: auto;
+	      /*background-color: #F8F8F8;*/
+	  	  border-bottom: 1px solid #a3c2c2;
+        }
+}
+.message_inlet {
+	            display: inline-block;
+	            word-wrap: break-word;
+			    background-color: yellow; 
+				border-radius: 18px;
+			    padding: 5px; 
+				max-width: 80%; 
+				margin-bottom: 5px; 
+				font-weight: normal;
+		    }
+.message_outlet {
+	             display: inline-block;
+	             word-wrap: break-word;
+			     background-color: #00ff00; 
+				 border-radius: 8px;
+			     padding: 5px; 
+				 max-width: 80%; 
+				 margin-bottom: 5px; 
+				 margin-left: 20%;
+				 font-weight: normal;
+		    }
+
+.friend {
+	text-align: center; 
+	padding-top:5%;
+	cursor: pointer;
+	color: #00ccff;
+}
+
+.friend:hover {
+	text-decoration: underline;
+}
+
+#profile_link {
+	padding-left: 5px;
+	padding-top: 3vh;
+}
+
+::-webkit-scrollbar {
+  width: 0.5vw;
+}
+
+/* the track (progress bar) of the scrollbar */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+
+/* the draggable scrolling handle */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #80b3ff, #eeccff, white); 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #eeccff; 
+}
+		  
