@@ -2,7 +2,7 @@
 
    $endpoints = array(
          array('method'=>'GET', 
-            'uri'=>'%ajax/[0-9]+/messages/[0-9]%', 
+            'uri'=>'%ajax/[0-9]+/messages/[0-9]+%', 
             'controller'=>'Ajax/messages_giver.php'
          ),
          array('method'=>'GET', 
@@ -10,7 +10,7 @@
             'controller'=>'Ajax/chats_giver.php'
          ),
          array('method'=>'GET', 
-            'uri'=>'%ajax/[0-9]+/chat/[0-9]%', 
+            'uri'=>'%ajax/[0-9]+/chat/[0-9]+%', 
             'controller'=>'Ajax/chat_fetcher.php'
          ),
          array('method'=>'POST', 
@@ -22,7 +22,7 @@
             'controller'=>'Ajax/all_friends_giver.php'
          ),
          array('method'=>'GET', 
-            'uri'=>'%ajax/[0-9]+/friend_removal/[0-9]%', 
+            'uri'=>'%ajax/[0-9]+/friend_removal/[0-9]+%', 
             'controller'=>'Ajax/friend_remover.php'
          ),
          array('method'=>'GET', 
@@ -30,8 +30,12 @@
             'controller'=>'Ajax/inventory_giver.php'
          ),
          array('method'=>'GET', 
-            'uri'=>'%ajax/[0-9]+/friend_addition/[0-9](\?.*)?%', 
+            'uri'=>'%ajax/[0-9]+/friend_addition/[0-9]+(\?.*)?%', 
             'controller'=>'Ajax/friend_adder.php'
+         ),
+         array('method'=>'GET', 
+            'uri'=>'%ajax/[0-9]+/friends/[0-9]+%', 
+            'controller'=>'Ajax/new_friends_giver.php'
          )
    );
 
