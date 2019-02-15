@@ -16,6 +16,8 @@
             $data['user_name'] = $user->showName();
             $messenger = $service_factory->make_service_instance('Messenger');
             $data['last_rec_mes_id'] = $messenger->fetch_id_of_last_received_message($data['user_id']);
+            $friend_broker = $service_factory->make_service_instance('FriendBroker');
+            $data['last_friendship_id'] = $friend_broker->fetch_last_friendship_id($data['user_id']);
 
             /*if ($request->POST) {
                 $data['active_id'] = $request->POST['fr_id'];
