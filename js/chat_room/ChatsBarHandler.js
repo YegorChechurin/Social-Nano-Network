@@ -47,7 +47,7 @@ function ChatsBarHandler(){
                                         chats = [chat];
                                     }
                                     var pattern = /id="f[0-9]+"/;
-                                    var content = $('#sidebar').html();
+                                    var content = $('#friends').html();
                                     if (!pattern.exec(content)) {
                                         var text = $('<div style="text-align:center"></div>').
                                         text(
@@ -56,7 +56,7 @@ function ChatsBarHandler(){
                                              Social Nano Network users, you have to add them to your\
                                              friend list'
                                         );
-                                        $('#sidebar').html(text);
+                                        $('#friend_caption').html(text);
                                     }
                                     $('#chats_wrapper').html('');
                                     chats.forEach(form_chat_header);
@@ -71,8 +71,17 @@ function ChatsBarHandler(){
                                  Social Nano Network users, you have to add them to your\
                                  friend list'
                             );
-                            $('#sidebar').html(text);
+                            $('#friend_caption').html(text);
+                            $('#friends').html('');
                         }
+                    } else {
+                        var text = $('<div style="text-align:center"></div>').
+                        text(
+                            'You have no friends. In Social Nano Network you\
+                             can chat only with friends. Go to your profile page\
+                             and add some friends'
+                        );
+                        $('#friend_caption').html(text);
                     }
                 }
             }
@@ -137,6 +146,10 @@ function ChatsBarHandler(){
                             };
                             chats = [chat];
                             chats.forEach(form_chat_header);
+                        } else {
+                            var text = $('<div class="text" style="text-align:center;padding-top:5%"></div>').
+                            text('You have no chats');
+                            $('#chats_wrapper').html(text);
                         }
                     }
                 }

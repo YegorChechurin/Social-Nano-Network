@@ -22,7 +22,7 @@
 		<div class="col-sm-6 d-none d-sm-block" id="mes"></div>
 		<div class="col-sm-3 d-none d-sm-block" id="sidebar">
         <!--<div class="col-sm-3" id="sidebar">-->
-            <div class="text" style="text-align: center; padding-top:5%">
+            <div id="friend_caption" class="text" style="text-align: center; padding-top:5%">
 		       Friends you have no chats with:
 		    </div>
             <div id="friends"></div>
