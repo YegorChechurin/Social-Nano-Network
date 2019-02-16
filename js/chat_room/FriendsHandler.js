@@ -38,30 +38,28 @@ function FriendsHandler() {
 	}
 
 	this.remove_friends = function(last_friendship_id){
-		if (friends) {
-			for (var i = 0; i < friends.length; i++) {
-				var friendship_id = parseInt(friends[i].friendship_id); 
-				if (friendship_id > last_friendship_id) {					
-					var id = parseInt(friends[i].friend_id);
-					$('#f'+id).remove();
-					alert('So sad... User '+friends[i].friend_name+
-						' is no longer your friend');
-					friends.splice(i,1);
-					var pattern = /id="f[0-9]+"/;
-                    var content = $('#friends').html();
-                    if (!pattern.exec(content)) {
-                        var text = $('<div style="text-align:center"></div>').
-                        text(
-                            'You have chats with all of your\
-                             friends. If you would like to chat with some other\
-                             Social Nano Network users, you have to add them to your\
-                             friend list'
-                        );
-                        $('#friend_caption').html(text);
-                    }
-				}
+		for (var i = 0; i < friends.length; i++) {
+			var friendship_id = parseInt(friends[i].friendship_id); 
+			if (friendship_id > last_friendship_id) {					
+				var id = parseInt(friends[i].friend_id);
+				$('#f'+id).remove();
+				alert('So sad... User '+friends[i].friend_name+
+					' is no longer your friend');
+				friends.splice(i,1);
+				var pattern = /id="f[0-9]+"/;
+                var content = $('#friends').html();
+                if (!pattern.exec(content)) {
+                    var text = $('<div style="text-align:center"></div>').
+                    text(
+                        'You have chats with all of your\
+                         friends. If you would like to chat with some other\
+                         Social Nano Network users, you have to add them to your\
+                         friend list'
+                    );
+                    $('#friend_caption').html(text);
+                }
 			}
-		} else {}
+		}
 	}
 
 }
