@@ -3,7 +3,11 @@
 <head>
     <title>Profile</title>
     <?php require '../views/setup.php' ?>
-    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/ProfilePageHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/BarsBuilder.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/FriendsListener.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/FriendsHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/Broker.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/events_map.js"></script>
     <link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/profile_page_style.css">
 </head>
 <body>
@@ -39,6 +43,8 @@
 
     var users;
 
+    var last_friendship_id = <?=$data['last_friendship_id']?>;
+
     $(document).ready(
         function(){
             /**
@@ -49,8 +55,14 @@
             var profile_link = '<a href="'+href+'">MESSENGER</a>';
             $('#messenger_link').html(profile_link);
 
-            var h = new ProfilePageHandler();
+            var h = new BarsBuilder();
             h.build_bars();
+
+            /** 
+             * Starting a listener which will be sending AJAX requests for new friends on a regular basis. 
+             */
+            var l = new FriendsListener();
+            l.listen_new_friends();
         }
     );
 </script>
