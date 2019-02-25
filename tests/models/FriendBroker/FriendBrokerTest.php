@@ -61,6 +61,14 @@ class FriendBrokerTest extends TestCase {
         $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
     }
 
+    public function testFetchFriendshipID() {
+        $id_1 = 1;
+        $id_2 = 5;
+        $expected_friendship_id = '3';
+        $friendship_id = $this->FB->fetch_friendship_id($id_1,$id_2);
+        $this->assertEquals($friendship_id,$expected_friendship_id); 
+    }
+
     public function testFetchAllFriends() {
     	$user_id = 1;
     	$friend_info = $this->FB->fetch_all_friends($user_id);
