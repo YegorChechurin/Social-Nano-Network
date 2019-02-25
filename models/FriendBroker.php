@@ -90,6 +90,31 @@
         }
 
         /**
+         * Fetches friendship id of friendship connection established between 
+         * specific users
+         *
+         * @param integer $id_1 - User id of the 1st user involved in the
+         * friendship.
+         *
+         * @param integer $id_2 - User id of the 2nd user involved in the
+         * friendship.
+         *
+         * @return string - Friendship id of the friendship between users with
+         * IDs $id_1 and $id_2.
+         */
+        public function fetch_friendship_id($id_1,$id_2) {
+            $fields = ['friendship_id'];
+            $clause = '(friend1_id=:id_1 AND friend2_id=:id_2) OR (friend1_id=:id_2 AND friend2_id=:id_1)';
+            $map = [
+               ':id_1'=>$id_1,
+               ':id_2'=>$id_2
+            ];
+            $outcome = $this->DB->select($this->table,$fields,$clause,$map);
+            $friendship_id = $outcome[0]['friendship_id'];
+            return $friendship_id;
+        }
+
+        /**
          * Fetches information about all the friends that a specific user has
          *
          * If a user has friends, fetches information about every friendship 
