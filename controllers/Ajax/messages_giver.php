@@ -29,5 +29,3 @@
     $messenger = new Messenger($db);
     $ts = time();
     long_polling($messenger,$user_id,$message_id,$ts);
-      
-?>

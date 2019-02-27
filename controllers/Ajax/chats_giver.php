@@ -10,5 +10,3 @@
     $messenger = new Messenger($db);
     $chats = $messenger->fetch_user_chats($user_id);
     echo $chats;
-    
-?>

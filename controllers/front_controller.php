@@ -17,5 +17,3 @@
    $request = new Request();
    $router = new Gateway($request,$routes);
    $router->dispatch();
-
-?>

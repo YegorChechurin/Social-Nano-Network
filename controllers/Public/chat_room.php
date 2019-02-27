@@ -14,5 +14,3 @@
     $data = $controller->get_view_data($user_factory,$service_factory);
     $controller->load_view($view_map,$data);
 
-?>
-

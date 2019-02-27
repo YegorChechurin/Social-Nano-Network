@@ -5,5 +5,3 @@
     interface iRouter {
     	function dispatch();
     }
-
-?>

@@ -87,5 +87,3 @@ class DatabaseTest extends TestCase {
     }
 
 }
-
-?>

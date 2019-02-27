@@ -185,5 +185,3 @@ class MessengerTest extends TestCase {
     }
 
 }
-
-?>

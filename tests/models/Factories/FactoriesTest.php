@@ -34,5 +34,3 @@ class FactoriesTest extends TestCase {
     }
 
 }
-
-?>

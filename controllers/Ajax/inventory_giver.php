@@ -10,5 +10,3 @@
     $user_tracker = new UserTracker($db);
     $users = $user_tracker->fetch_all_registered_users($user_id);
     echo $users;
-    
-?>

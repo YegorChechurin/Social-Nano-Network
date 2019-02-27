@@ -9,5 +9,3 @@
     const PASSWORD = '';
 
     const SCHEMA = 'snn';
-
-?>

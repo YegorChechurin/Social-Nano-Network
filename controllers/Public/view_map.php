@@ -8,5 +8,3 @@
     		'view'=>'../views/profile_page_view.php'
         )
     );
-
-?>

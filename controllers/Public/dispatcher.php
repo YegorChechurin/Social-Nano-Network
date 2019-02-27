@@ -17,5 +17,3 @@
    $request = new Request();
    $router = new LocalDispatcher($request,$endpoints); 
    $router->dispatch();
-   
-?>

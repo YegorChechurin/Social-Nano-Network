@@ -14,5 +14,3 @@
     $db = new Database();
     $messenger = new Messenger($db);
     $messenger->send_message($mes_info);
-    
-?>

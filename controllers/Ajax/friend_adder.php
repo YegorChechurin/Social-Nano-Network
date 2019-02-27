@@ -15,5 +15,3 @@
     	$names['name2']);
     $friendship_id = $friend_broker->fetch_friendship_id($user_id,$friend_id);
     echo $friendship_id;
-    
-?>

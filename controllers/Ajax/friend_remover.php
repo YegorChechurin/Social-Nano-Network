@@ -10,5 +10,3 @@
     $db = new Database();
     $friend_broker = new FriendBroker($db);
     $friend_broker->delete_friendship($user_id,$friend_id);
-    
-?>

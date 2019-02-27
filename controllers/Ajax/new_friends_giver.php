@@ -16,5 +16,3 @@
     } elseif ($real_last_friendship_id < $last_friendship_id) {
         echo json_encode($real_last_friendship_id);
     }
-    
-?>

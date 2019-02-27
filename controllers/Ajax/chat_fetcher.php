@@ -11,5 +11,3 @@
     $messenger = new Messenger($db);
     $messages = $messenger->fetch_chat_messages($user_id,$partner_id);
     echo $messages;
-
-?>
