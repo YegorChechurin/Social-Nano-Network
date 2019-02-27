@@ -16,6 +16,22 @@ function FriendsHandler() {
 
 	this.display_new_friend = function(new_friend){
 		alert('Congrats, user '+new_friend.friend_name+' is your new friend!');
+		var id = parseInt(new_friend.friend_id);
+		if (chats) {
+			var partner_IDs = [];
+			chats.forEach(function(chat){
+                partner_IDs.push(chat.partner_id);
+            });
+            if (!partner_IDs.includes(id)) {
+            	create_new_friend_node(new_friend);
+            }
+		} else {
+			create_new_friend_node(new_friend);
+		}
+	}
+
+	var create_new_friend_node = function(new_friend){
+		var id = parseInt(new_friend.friend_id);
 		var pattern = /id="f[0-9]+"/;
         var content = $('#friends').html();
         if (!pattern.exec(content)) {
@@ -23,7 +39,6 @@ function FriendsHandler() {
             text('Friends you have no chats with:');
             $('#friend_caption').html(text);
         }
-		var id = parseInt(new_friend.friend_id);
 		var block = $('<div id="f'+id+'" class="friend"></div>');
         block.html('Start chatting with '+'<b>'+new_friend.friend_name+'</b>');
         $('#friends').prepend(block);
