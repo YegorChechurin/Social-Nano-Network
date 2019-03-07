@@ -1,3 +1,5 @@
+.lock {color: red}
+
 #navbar {
 	height: 10%; 
 	/*background: linear-gradient(to bottom, #33ccff 0%, #ff99cc 100%);*/
@@ -49,6 +51,15 @@
               cursor: pointer;
 			  color: #00ccff;
 			  background: linear-gradient(to right,#527a7a,white);
+			  padding-left: 5px;
+		     }
+.chat_header_blocked {
+	          position: relative;
+			  border-bottom: 1px solid #a3c2c2; 
+			  width: 100%; 
+			  min-height: 20%; /*55px;*/
+			  overflow: hidden; 
+			  background: linear-gradient(to right,#ff4d4d,white);
 			  padding-left: 5px;
 		     }
 .chat_header:hover  {
