@@ -1,13 +1,14 @@
 <?php
 
     namespace Models;
+    use Models\iObserver;
     use Skeleton\Database\Database;
 
     /**
      * A class which holds all the messaging and chatting functionality of the 
      * Social Nano Network.
      */
-    class Messenger {
+    class Messenger implements iObserver {
 
     	/**
     	 * @var Skeleton\Database\Database - Points to an instance of Database class
@@ -19,7 +20,7 @@
     	 *
     	 * @param Skeleton\Database\Database $database - Database object
     	 */
-    	public function __construct($database) {
+    	public function __construct(Database $database) {
     		$this->DB = $database;
     	}
 
@@ -78,7 +79,7 @@
     		$fields = [
     			'participant1_id','participant1_name','participant2_id',
     			'participant2_name','last_mes_auth_id','last_mes_auth_name',
-    			'last_mes_text','chat_key'
+    			'last_mes_text','chat_key','blocked'
     		];
     		$sender_id = $mes_info['sender_id'];
     	    $sender_name = $mes_info['sender_name'];
@@ -86,9 +87,10 @@
     	    $recipient_name = $mes_info['recipient_name'];
             $message = $mes_info['message'];
             $key = $sender_id + $recipient_id;
+            $blocked = 'no';
             $values = [
             	$sender_id,$sender_name,$recipient_id,$recipient_name,
-            	$sender_id,$sender_name,$message,$key
+            	$sender_id,$sender_name,$message,$key,$blocked
             ];
             $this->DB->insert($table,$fields,$values);
     	}
@@ -161,6 +163,7 @@
 	   	   	  	$chat['last_mes_auth_name'] = $value['last_mes_auth_name'];
 	   	   	  	$chat['last_mes_text'] = $value['last_mes_text'];
 	   	   	  	$chat['last_mes_ts'] = $value['last_mes_ts'];
+                $chat['blocked'] = $value['blocked'];
 	   	   	  	$chats[] = $chat;
 	   	   	  }
 	   	   	  return json_encode($chats);
@@ -217,5 +220,51 @@
             }
             
     	}
+
+        public function block_chat($data) {
+            $user_id_1 = $data[0];
+            $user_id_2 = $data[1];
+            $table = 'chats';
+            $fields = ['chat_id'];
+            $clause = '(participant1_id=:id_1 AND participant2_id=:id_2) OR (participant1_id=:id_2 AND participant2_id=:id_1)';
+            $map = [
+               ':id_1'=>$user_id_1,
+               ':id_2'=>$user_id_2
+            ];
+            $result = $this->DB->select($table,$fields,$clause,$map);
+            if ($result) {
+              $fields = ['blocked'];
+              $clause = 'chat_id=:id';
+              $map = [':blocked'=>'yes',':id'=>$result[0]['chat_id']];
+              $this->DB->update($table,$fields,$clause,$map);
+            }
+        }
+
+        public function unblock_chat($data) {
+            $user_id_1 = $data[0];
+            $user_id_2 = $data[1];
+            $table = 'chats';
+            $fields = ['chat_id'];
+            $clause = '(participant1_id=:id_1 AND participant2_id=:id_2) OR (participant1_id=:id_2 AND participant2_id=:id_1)';
+            $map = [
+               ':id_1'=>$user_id_1,
+               ':id_2'=>$user_id_2
+            ];
+            $result = $this->DB->select($table,$fields,$clause,$map);
+            if ($result) {
+              $fields = ['blocked'];
+              $clause = 'chat_id=:id';
+              $map = [':blocked'=>'no',':id'=>$result[0]['chat_id']];
+              $this->DB->update($table,$fields,$clause,$map);
+            }
+        }
+
+        public function process_event($event, $data) {
+            if ($event=='friendship_made') {
+                $this->unblock_chat($data);
+            } elseif ($event=='friendship_deleted') {
+                $this->block_chat($data);
+            }  
+        }
 
     }

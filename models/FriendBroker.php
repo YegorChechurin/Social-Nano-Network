@@ -1,13 +1,14 @@
 <?php
 
     namespace Models;
+    use Models\iObservable;
     use Skeleton\Database\Database;
 
     /**
      * A class which provides means for establishing and maintaining   
      * friendship connections in Social Nano Network. 
      */
-    class FriendBroker {
+    class FriendBroker implements iObservable {
 
     	/**
     	 * @var Skeleton\Database\Database - Points to an instance of Database class
@@ -20,6 +21,11 @@
          */
         private $table;
 
+        /**
+         * @var Object[] - Contains subscribed observers
+         */
+        private $observers;
+
     	/**
     	 * A Database object is assigned to $this->DB variable
     	 *
@@ -28,7 +34,47 @@
     	public function __construct(Database $database) {
     		$this->DB = $database;
             $this->table = 'friends';
+            $this->observers = [];
     	}
+
+        public function attach_observer(iObserver $observer, $event) {
+            if (array_key_exists($event, $this->observers)) {
+                if (!in_array($observer,$this->observers[$event])) {
+                    $this->observers[$event][] = $observer;
+                }
+            } else {
+                $this->observers[$event] = [];
+                $this->observers[$event][] = $observer;
+            }
+        }
+
+        public function detach_observer(iObserver $observer, $event) {
+            if (in_array($observer,$this->observers[$event])) {
+                $key = array_search($observer,$this->observers[$event]);
+                array_splice($this->observers[$event], $key, 1);
+            } 
+        }
+
+        public function fetch_event_observers($event) {
+            if (array_key_exists($event, $this->observers)) {
+                return $this->observers[$event];
+            } else {
+                throw new \Exception('No observers are attached for event called '."'".$event."'");
+            }
+                
+        }
+
+        public function fire_event($event, $data) {
+            try {
+                $event_observers = $this->fetch_event_observers($event);
+                foreach ($event_observers as $observer) {
+                    $observer->process_event($event,$data);
+                }
+            } catch (\Exception $e) {
+                echo 'Exception caught: '.$e->getMessage();
+                echo "<br>";
+            }
+        }
 
         /**
          * Establishes new friendship connection
@@ -61,6 +107,9 @@
                 ];
                 $values = [$id_1,$id_2,$name_1,$name_2];
                 $this->DB->insert($this->table,$fields,$values);
+                $event = 'friendship_made';
+                $data = [$id_1,$id_2];
+                $this->fire_event($event,$data);
             } 
         }
 
@@ -86,6 +135,9 @@
             $friendship_id = $this->DB->select($this->table,$fields,$clause,$map); 
             if ($friendship_id) {
                 $this->DB->delete($this->table,$clause,$map);
+                $event = 'friendship_deleted';
+                $data = [$id_1,$id_2];
+                $this->fire_event($event,$data);
             } 
         }
 
