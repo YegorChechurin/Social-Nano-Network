@@ -39,7 +39,8 @@ function ChatsBarHandler(){
                                         last_mes_auth_id : 0,
                                         last_mes_auth_name : user_name,
                                         last_mes_text : '',
-                                        last_mes_ts : 0 
+                                        last_mes_ts : 0,
+                                        blocked : 'no' 
                                     };
                                     if (chats) {
                                         chats.splice(0,0,chat);
@@ -126,7 +127,8 @@ function ChatsBarHandler(){
                                     last_mes_auth_id : 0,
                                     last_mes_auth_name : user_name,
                                     last_mes_text : '',
-                                    last_mes_ts : 0 
+                                    last_mes_ts : 0,
+                                    blocked : 'no' 
                                 };
                                 chats.splice(0,0,chat);
                             } else {
@@ -142,7 +144,8 @@ function ChatsBarHandler(){
                                 last_mes_auth_id : 0,
                                 last_mes_auth_name : user_name,
                                 last_mes_text : '',
-                                last_mes_ts : 0 
+                                last_mes_ts : 0,
+                                blocked : 'no'  
                             };
                             chats = [chat];
                             chats.forEach(form_chat_header);
@@ -216,22 +219,31 @@ function ChatsBarHandler(){
 	var form_chat_header = function(chat){
         var id = 'c'+chat.partner_id; 
         $("#chats_wrapper").append('<div id="'+id+'"></div>');
-        $("#"+id).click(function(){
-            display_chat(chat.partner_id,chat.partner_name);
-        });
         $("#"+id).html('<b class="text">'+chat.partner_name+'</b><br>'+
         chat.last_mes_auth_name+': '+chat.last_mes_text);
-        $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
-        var parsed_id = parseInt(chat.partner_id);
-        if (chat.partner_id==active_id) {
-            $("#"+id).attr('class','active_chat_header text-truncate');
-            register_read(parsed_id);
-            mark_chat_read(parsed_id);
-        } else { 
-            $("#"+id).attr('class','chat_header text-truncate');
-            var ts = chat.last_mes_ts;
-            check_chat(parsed_id,ts);
-            mark_chat(parsed_id);
+        if (chat.blocked=='no') {
+            $("#"+id).click(function(){
+                display_chat(chat.partner_id,chat.partner_name);
+            });
+            $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
+            var parsed_id = parseInt(chat.partner_id);
+            if (chat.partner_id==active_id) {
+                $("#"+id).attr('class','active_chat_header text-truncate');
+                register_read(parsed_id);
+                mark_chat_read(parsed_id);
+            } else { 
+                $("#"+id).attr('class','chat_header text-truncate');
+                var ts = chat.last_mes_ts;
+                check_chat(parsed_id,ts);
+                mark_chat(parsed_id);
+            }
+        } else {
+            $("#"+id).attr('class','chat_header_blocked text-truncate');
+            var blocked_div = $('<div style="position:absolute; top:0; right:0;"></div>');
+            /*https://github.com/danklammer/bytesize-icons*/
+            var blocked_sign = $('<svg class="lock" viewBox="0 0 32 32" width="32" height="32"><use xlink:href="http://localhost/SNN/images/lock.svg#i-lock"></use></svg>');
+            blocked_div.append(blocked_sign);
+            $("#"+id).append(blocked_div);
         }
 	}
     
@@ -253,7 +265,7 @@ function ChatsBarHandler(){
      * @param {number} partner_id - User id of chat partner.
      * @param {string} partner_name - Name of chat partner.
      */
-	var display_chat = function(partner_id,partner_name){
+	/*var display_chat = function(partner_id,partner_name){
 		number_of_messages_displayed = 0;
         active_id = partner_id;  
         active_name = partner_name;
@@ -292,12 +304,57 @@ function ChatsBarHandler(){
             if (item.partner_id==active_id) {
                 $("#c"+active_id).attr("class","active_chat_header text-truncate");
             } else {
-                $("#c"+item.partner_id).attr("class","chat_header text-truncate");
-                id = parseInt(item.partner_id);
-                mark_chat(id);
+                if (item.blocked=='no') {
+                    $("#c"+item.partner_id).attr("class","chat_header text-truncate");
+                    id = parseInt(item.partner_id);
+                    mark_chat(id);
+                } else {
+                    $("#c"+item.partner_id).attr("class","chat_header_blocked text-truncate");
+                }
             }
         });
-	}
+	}*/
+
+    var display_chat = function(partner_id,partner_name){
+        number_of_messages_displayed = 0;
+        $.get("http://localhost/SNN/ajax/"+user_id+"/chat/"+partner_id, 
+            function(data, status){
+                if (status=="success") {
+                    $("#mes").html('');
+                    var messages = JSON.parse(data);
+                    messages.forEach(
+                        function(message) {
+                            number_of_messages_displayed++;
+                            if (message.sender_id == user_id) {
+                                var content = '<div class="message_outlet" id="m'
+                                + number_of_messages_displayed +
+                                '"><b>You:</b> '+message.message+'</div><br>';
+                                $("#mes").append(content);
+                            } else {
+                                var content = '<div class="message_inlet" id="m'
+                                + number_of_messages_displayed +
+                                '"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
+                                $("#mes").append(content);
+                            }
+                            var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
+                            if (last_mes_pos > mes_height) {
+                                document.getElementById("mes").scrollTop = last_mes_pos; 
+                            }
+                        }
+                    );
+                }
+            }
+        );
+        if (active_id) {
+            $("#c"+active_id).attr("class","chat_header text-truncate");
+        }
+        $("#c"+partner_id).attr("class","active_chat_header text-truncate");
+        active_id = partner_id;  
+        active_name = partner_name;
+        var id = parseInt(active_id);
+        register_read(id);
+        mark_chat_read(id);
+    }
 
     /** 
      * Checks whether chat has any unread messages.
