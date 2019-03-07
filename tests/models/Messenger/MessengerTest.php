@@ -139,13 +139,13 @@ class MessengerTest extends TestCase {
                 'partner_id'=>2, 'partner_name'=>"User2", 
                 'last_mes_auth_id'=>"1", 'last_mes_auth_name'=>"User1", 
                 'last_mes_text'=>"Miten menee???",
-                'last_mes_ts'=>$fixture_time
+                'last_mes_ts'=>$fixture_time, 'blocked'=>'no'
             ],
             [
                 'partner_id'=>4, 'partner_name'=>"Test1", 
                 'last_mes_auth_id'=>"1", 'last_mes_auth_name'=>"User1", 
                 'last_mes_text'=>"Let's test something",
-                'last_mes_ts'=>$fixture_time
+                'last_mes_ts'=>$fixture_time, 'blocked'=>'no'
             ]
         ];
         $expected = json_encode($expected_raw);
@@ -182,6 +182,32 @@ class MessengerTest extends TestCase {
         $outcome = $this->M->fetch_id_of_last_received_message($user_id);
         $expected = 0;
         $this->assertTrue($expected==$outcome);
+    }
+
+    public function testProcessEvent() {
+        $fixture_time = date("Y-m-d H:i:s");
+        $tables = ['chats'];
+        $user_id_1 = 1;
+        $user_id_2 = 2;
+        $data = [$user_id_1,$user_id_2];
+
+        // Mocking 'friendship_deleted' event
+        $event1 = 'friendship_deleted';
+        $this->M->process_event($event1,$data);
+        $actual_dataset = $this->conn->createDataset($tables);
+        $flat_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedProcessEvent1.xml');
+        $expected_dataset = new ReplacementDataSet($flat_dataset);
+        $expected_dataset->addFullReplacement("##fixture_time##",$fixture_time);
+        $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
+        
+        // Mocking 'friendship_made' event
+        $event2 = 'friendship_made';
+        $this->M->process_event($event2,$data);
+        $actual_dataset = $this->conn->createDataset($tables);
+        $flat_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedProcessEvent2.xml');
+        $expected_dataset = new ReplacementDataSet($flat_dataset);
+        $expected_dataset->addFullReplacement("##fixture_time##",$fixture_time);
+        $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
     }
 
 }

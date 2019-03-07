@@ -4,6 +4,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\DbUnit\TestCaseTrait;
 use Skeleton\Database\Database;
 use Models\FriendBroker;
+use Models\iObserver;
 use const Skeleton\Database\DSN;
 use const Skeleton\Database\USER;
 use const Skeleton\Database\PASSWORD;
@@ -17,11 +18,17 @@ class FriendBrokerTest extends TestCase {
 
     private $FB;
 
+    private $FB_mock;
+
     private $tables;
 
     public function getConnection() {  
         $db = new Database();
         $this->FB = new FriendBroker($db); 
+        $this->FB_mock = $this->getMockBuilder(FriendBroker::class)
+                              ->setConstructorArgs([$db])
+                              ->setMethods(['fire_event'])
+                              ->getMock();
         $this->tables = ['friends'];
         $pdo = new PDO(DSN,USER,PASSWORD);
         $this->conn = $this->createDefaultDBConnection($pdo, SCHEMA);
@@ -33,12 +40,50 @@ class FriendBrokerTest extends TestCase {
         return $fixture_dataset;
     }
 
+    public function testNoAttachedObservers() {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("No observers are attached for event called 'some_event'");
+        $event = 'some_event';
+        $this->FB->fetch_event_observers($event);
+    }
+
+    public function testObservable() {
+        $data = 'some_data';
+        $event1 = 'event1';
+        $event2 = 'event2';
+        $observer1 = $this->createMock(iObserver::class);
+        $observer1->expects($this->exactly(2))
+                         ->method('process_event')
+                         ->withConsecutive(
+                            [$this->equalTo($event1),$this->equalTo($data)],
+                            [$this->equalTo($event2),$this->equalTo($data)]
+                        );
+        $observer2 = $this->getMockBuilder(iObserver::class)
+                              ->setMethods(['process_event'])
+                              ->getMock();
+        $observer2->expects($this->once())
+                         ->method('process_event')
+                         ->with($this->equalTo($event1),$this->equalTo($data));
+        $this->FB->attach_observer($observer1,$event1);
+        $this->FB->attach_observer($observer2,$event1);
+        $this->FB->attach_observer($observer1,$event2);
+        $this->FB->fire_event($event1,$data);
+        $this->FB->fire_event($event2,$data);
+        $observer3 = $this->createMock(iObserver::class);
+        $observer3->expects($this->once())
+                         ->method('process_event')
+                         ->with($this->equalTo($event2),$this->equalTo($data));
+        $this->FB->detach_observer($observer1,$event2);
+        $this->FB->attach_observer($observer3,$event2);
+        $this->FB->fire_event($event2,$data);
+    }
+
     public function testMakeFriendship() {
     	$id_1 = 1;
     	$id_2 = 2;
     	$name_1 = 'User1';
     	$name_2 = 'User2';
-    	$this->FB->make_friendship($id_1,$id_2,$name_1,$name_2);
+        $this->FB_mock->make_friendship($id_1,$id_2,$name_1,$name_2);
         $actual_dataset = $this->conn->createDataset($this->tables);
         $expected_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedMakeFriendship_1.xml');
         $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
@@ -46,7 +91,7 @@ class FriendBrokerTest extends TestCase {
     	$id_2 = 3;
     	$name_1 = 'User1';
     	$name_2 = 'User3';
-    	$this->FB->make_friendship($id_1,$id_2,$name_1,$name_2);
+    	$this->FB_mock->make_friendship($id_1,$id_2,$name_1,$name_2);
         $actual_dataset = $this->conn->createDataset($this->tables);
         $expected_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedMakeFriendship_2.xml');
         $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
@@ -55,7 +100,7 @@ class FriendBrokerTest extends TestCase {
     public function testDeleteFriendship() {
     	$id_1 = 1;
     	$id_2 = 5;
-    	$this->FB->delete_friendship($id_1,$id_2);
+    	$this->FB_mock->delete_friendship($id_1,$id_2);
         $actual_dataset = $this->conn->createDataset($this->tables);
         $expected_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedDeleteFriendship.xml');
         $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
@@ -87,12 +132,12 @@ class FriendBrokerTest extends TestCase {
     	$id_2 = 3;
     	$name_1 = 'User1';
     	$name_2 = 'User3';
-    	$this->FB->make_friendship($id_1,$id_2,$name_1,$name_2);
+    	$this->FB_mock->make_friendship($id_1,$id_2,$name_1,$name_2);
     	$id_1 = 1;
     	$id_2 = 6;
     	$name_1 = 'User1';
     	$name_2 = 'Test3';
-    	$this->FB->make_friendship($id_1,$id_2,$name_1,$name_2);
+    	$this->FB_mock->make_friendship($id_1,$id_2,$name_1,$name_2);
     	$user_id = 1;
     	$friendship_id = 3;
     	$outcome = $this->FB->fetch_new_friends($user_id,$friendship_id);

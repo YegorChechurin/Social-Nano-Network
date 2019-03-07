@@ -4,6 +4,6 @@
 	<messages recipient_id="1" recipient_name="User1" sender_id="2" sender_name="User2" message="Terveee:)" />
 	<messages recipient_id="2" recipient_name="User2" sender_id="1" sender_name="User1" message="Miten menee???" />
     <messages recipient_id="4" recipient_name="Test1" sender_id="1" sender_name="User1" message="Let's test something" />
-    <chats chat_key="3" participant1_id="1" participant2_id="2" participant1_name="User1" participant2_name="User2" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Miten menee???" />
-    <chats chat_key="5" participant1_id="1" participant2_id="4" participant1_name="User1" participant2_name="Test1" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Let's test something" />
+    <chats chat_key="3" participant1_id="1" participant2_id="2" participant1_name="User1" participant2_name="User2" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Miten menee???" blocked="no" />
+    <chats chat_key="5" participant1_id="1" participant2_id="4" participant1_name="User1" participant2_name="Test1" last_mes_auth_id="1" last_mes_auth_name="User1" last_mes_text="Let's test something" blocked="no" />
 </dataset>
