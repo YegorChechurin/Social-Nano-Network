@@ -48,23 +48,25 @@ function MessagesListener(){
      * formed and 'message_sent' event is fired.
      */
 	this.listen_sent_messages = function(){
-		var text = $("#text").val();
-        $.post("http://localhost/SNN/ajax/"+user_id+"/messages",
-            {user_name:user_name, partner_id:active_id, partner_name:active_name, message:text}, 
-            function(data, status){
-                if (status=="success") {
-                    $("#text").val('');
-                    var message = {
-                        "sender_id":user_id,
-                        "sender_name":user_name,
-                        "recipient_id":active_id,
-                        "message":text
-                    };
-                    var event = 'message_sent';
-                    fire_event(event,message);
+        if (active_id) {
+            var text = $("#text").val();
+            $.post("http://localhost/SNN/ajax/"+user_id+"/messages",
+                {user_name:user_name, partner_id:active_id, partner_name:active_name, message:text}, 
+                function(data, status){
+                    if (status=="success") {
+                        $("#text").val('');
+                        var message = {
+                            "sender_id":user_id,
+                            "sender_name":user_name,
+                            "recipient_id":active_id,
+                            "message":text
+                        };
+                        var event = 'message_sent';
+                        fire_event(event,message);
+                    }
                 }
-            }
-        );
+            );
+        }
 	}
     
     /** 
