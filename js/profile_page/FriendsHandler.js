@@ -111,8 +111,8 @@ function FriendsHandler() {
 			+"?name1="+user_name+"&name2="+friend.friend_name, 
             function(data, status){
                 if (status=="success" && data) {
+                    last_friendship_id = parseInt(data);
                 	$("#u"+friend.friend_id).remove();
-                	last_friendship_id = parseInt(data);
                 	if (friends) {
                         friends.push(friend);
                     } else {
