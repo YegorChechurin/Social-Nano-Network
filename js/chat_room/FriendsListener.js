@@ -29,7 +29,7 @@ function FriendsListener() {
                 		var l = new FriendsListener();
                 		l.listen_new_friends();
                 	}
-                    setTimeout(recursion,1000);
+                    setTimeout(recursion,2000);
                 }
             }
         );

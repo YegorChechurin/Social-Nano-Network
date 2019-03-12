@@ -1,4 +1,4 @@
-.lock {color: red}
+.lock {position:absolute; top:0; right:0; color: red}
 
 #navbar {
 	height: 10%; 
@@ -62,6 +62,33 @@
 			  background: linear-gradient(to right,#ff4d4d,white);
 			  padding-left: 5px;
 		     }
+.hint 
+     {
+     	text-align: center;
+     	/*z-index: 1;*/
+     	display: none; 
+     	position: absolute; 
+     	left: 7.5px;
+     	word-wrap: break-word;
+     	max-width: 75%;
+     	max-height: 50%;
+     	border: 2px;
+     	border-radius: 6px;
+     	/*opacity: 1;*/
+     	background-color: #293d3d;
+     	color: white;
+     	text-shadow: 1px 1px 2px black, 0 0 2px blue, 0 0 1px darkblue;
+     }
+.hint:after {
+	content: "";
+	position: absolute;
+    top: 50%;
+    right: 100%;
+	margin-top: -7.5px;
+    border-width: 7.5px;
+    border-style: solid;
+    border-color: transparent #293d3d transparent transparent;
+}
 .chat_header:hover  {
 	                 background: linear-gradient(to right,#ccffff,white); 
 			       }

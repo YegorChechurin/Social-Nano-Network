@@ -14,21 +14,16 @@ function ChatsBarHandler(){
                 if (status=="success") {
                     friends = JSON.parse(data);
                     if (friends) {
-                        var partner_IDs = [];
-                        if (chats) {
-                            chats.forEach(function(chat){
-                                partner_IDs.push(chat.partner_id);
-                            });
-                        }
                         var counter = 0;
                         friends.forEach(function(friend){
                             var id = parseInt(friend.friend_id);
-                            if (!partner_IDs.includes(id)) {
+                            if (!chat_partner_IDs.includes(id)) {
                                 counter++;
                                 var block = $('<div id="f'+id+'" class="friend"></div>');
                                 block.html('Start chatting with '+'<b>'+friend.friend_name+'</b>');
                                 $('#friends').prepend(block);
                                 block.click(function(){
+                                    chat_partner_IDs.push(id);
                                     block.remove();
                                     $("#mes").html('');
                                     active_id = id;
@@ -115,12 +110,11 @@ function ChatsBarHandler(){
                         chats.forEach(convert_chat_last_mes_ts);
                         var ts = chats[0].last_mes_ts;
                         Cookies.set('last_mes_ts', ts, {expires:365});
-                        var partner_IDs = [];
                         chats.forEach(function(chat){
-                            partner_IDs.push(chat.partner_id);
+                            chat_partner_IDs.push(chat.partner_id);
                         });
                         if (active_id && active_name) {
-                            if (!partner_IDs.includes(active_id)) {
+                            if (!chat_partner_IDs.includes(active_id)) {
                                 var chat = {
                                     partner_id : active_id,
                                     partner_name : active_name,
@@ -131,6 +125,7 @@ function ChatsBarHandler(){
                                     blocked : 'no' 
                                 };
                                 chats.splice(0,0,chat);
+                                chat_partner_IDs.push(active_id);
                             } else {
                                 display_chat(active_id,active_name);
                             }
@@ -148,6 +143,7 @@ function ChatsBarHandler(){
                                 blocked : 'no'  
                             };
                             chats = [chat];
+                            chat_partner_IDs.push(active_id);
                             chats.forEach(form_chat_header);
                         } else {
                             var text = $('<div class="text" style="text-align:center;padding-top:5%"></div>').
@@ -239,11 +235,22 @@ function ChatsBarHandler(){
             }
         } else {
             $("#"+id).attr('class','chat_header_blocked text-truncate');
-            var blocked_div = $('<div style="position:absolute; top:0; right:0;"></div>');
+            var blocked_div = $('<div id="lock'+chat.partner_id+'" class="lock"></div>');
             /*https://github.com/danklammer/bytesize-icons*/
             var blocked_sign = $('<svg class="lock" viewBox="0 0 32 32" width="32" height="32"><use xlink:href="http://localhost/SNN/images/lock.svg#i-lock"></use></svg>');
             blocked_div.append(blocked_sign);
             $("#"+id).append(blocked_div);
+            var tooltip = $('<div id="hint'+chat.partner_id+'" class="hint"></div>').
+            text('Chat with user '+chat.partner_name+' is locked. In order to unlock it add user '+chat.partner_name+' to your friend list');
+            var height = document.getElementById(id).offsetTop;
+            var top = 1*height;
+            $("#mes").append(tooltip);
+            $("#"+id).hover(function(){
+                $('#hint'+chat.partner_id).css('top',top);
+                $('#hint'+chat.partner_id).css('display','inline-block');
+            }, function(){
+                $('#hint'+chat.partner_id).css('display','none');
+            });
         }
 	}
     
@@ -320,7 +327,15 @@ function ChatsBarHandler(){
         $.get("http://localhost/SNN/ajax/"+user_id+"/chat/"+partner_id, 
             function(data, status){
                 if (status=="success") {
-                    $("#mes").html('');
+                    var nodes = $("#mes").children();
+                    var pattern = /m[0-9]+/;
+                    for (var i = 0; i < nodes.length; i++) {
+                        if (pattern.exec(nodes[i].id)) {
+                            $("#"+nodes[i].id).remove();
+                        } else if (nodes[i].localName=='br') {
+                            $(nodes[i]).remove();
+                        }
+                    }
                     var messages = JSON.parse(data);
                     messages.forEach(
                         function(message) {
@@ -476,5 +491,57 @@ function ChatsBarHandler(){
 		$("#unread_c"+chat_partner_id).attr('class','visible');
         $("#c"+chat_partner_id).attr('class','chat_header_unread text-truncate');
 	}
+
+    this.unblock_chat = function(chat){
+        $("#lock"+chat.partner_id).remove();
+        $("#hint"+chat.partner_id).remove();
+        var id = 'c'+chat.partner_id; 
+        $("#"+id).off('hover');
+        $("#"+id).click(function(){
+            display_chat(chat.partner_id,chat.partner_name);
+        });
+        $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
+        var parsed_id = parseInt(chat.partner_id);   
+        $("#"+id).attr('class','chat_header text-truncate');
+        var ts = chat.last_mes_ts;
+        check_chat(parsed_id,ts);
+        mark_chat(parsed_id);
+    }
+
+    this.block_chat = function(chat){
+        if (chat.partner_id==active_id) {
+            active_id = 0;
+            active_name = '';
+            var nodes = $("#mes").children();
+            var pattern = /m[0-9]+/;
+            for (var i = 0; i < nodes.length; i++) {
+                if (pattern.exec(nodes[i].id)) {
+                    $("#"+nodes[i].id).remove();
+                } else if (nodes[i].localName=='br') {
+                    $(nodes[i]).remove();
+                }
+            }
+        }
+        var id = 'c'+chat.partner_id; 
+        $("#"+id).off('click');
+        $("#unread_"+id).remove();
+        $("#"+id).attr('class','chat_header_blocked text-truncate');
+        var blocked_div = $('<div id="lock'+chat.partner_id+'" class="lock"></div>');
+        /*https://github.com/danklammer/bytesize-icons*/
+        var blocked_sign = $('<svg class="lock" viewBox="0 0 32 32" width="32" height="32"><use xlink:href="http://localhost/SNN/images/lock.svg#i-lock"></use></svg>');
+        blocked_div.append(blocked_sign);
+        $("#"+id).append(blocked_div);
+        var tooltip = $('<div id="hint'+chat.partner_id+'" class="hint"></div>').
+        text('Chat with user '+chat.partner_name+' is locked. In order to unlock it add user '+chat.partner_name+' to your friend list');
+        var height = document.getElementById(id).offsetTop;
+        var top = 1*height;
+        $("#mes").append(tooltip);
+        $("#"+id).hover(function(){
+            $('#hint'+chat.partner_id).css('top',top);
+            $('#hint'+chat.partner_id).css('display','inline-block');
+        }, function(){
+            $('#hint'+chat.partner_id).css('display','none');
+        });
+    }
 
 }
