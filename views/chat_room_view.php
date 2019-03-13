@@ -19,8 +19,8 @@
     </div>
 	<div class="row" style="height: 60%;">
         <div id="chats_wrapper" class="col-sm-3"></div>
-		<div class="col-sm-6 d-none d-sm-block" id="mes"></div>
-		<div class="col-sm-3 d-none d-sm-block" id="sidebar">
+		<div id="mes" class="col-sm-6 d-none d-sm-block"></div>
+		<div id="sidebar" class="col-sm-3 d-none d-sm-block">
         <!--<div class="col-sm-3" id="sidebar">-->
             <div id="friend_caption" class="text" style="text-align: center; padding-top:5%">
 		       Friends you have no chats with:
@@ -95,6 +95,8 @@
      * @type {Object[]}
      */
     var chats;
+
+    var chat_partner_IDs = [];
     
     /** 
      * Array of user friends. Each friend is represented by an object which
