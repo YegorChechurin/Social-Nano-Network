@@ -80,8 +80,10 @@
                 $fields = implode(',',$fields);
                 $query = sprintf($format,$fields,$table);
                 $prep = $this->conn->prepare($query);
-                foreach ($clause_pars as $key => $value) {
-                    $prep->bindValue($key, $value);
+                if ($clause_pars) {
+                    foreach ($clause_pars as $key => $value) {
+                       $prep->bindValue($key, $value);
+                    }
                 }
                 $prep->execute();
                 $result = $prep->fetchAll(\PDO::FETCH_ASSOC);
