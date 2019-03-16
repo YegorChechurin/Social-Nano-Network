@@ -99,7 +99,7 @@
                ':id_1'=>$id_1,
                ':id_2'=>$id_2
             ];
-            $friendship_id = $this->DB->select($this->table,$fields,$clause,$map); 
+            $friendship_id = $this->DB->select($this->table,$fields,$clause,$map);
             if (!$friendship_id) {
                 $fields = [
                     'friend1_id','friend2_id',
@@ -126,19 +126,21 @@
          * friends by user with user id $id_1.
          */
         public function delete_friendship($id_1,$id_2) {
-            $fields = ['friendship_id'];
-            $clause = '(friend1_id=:id_1 AND friend2_id=:id_2) OR (friend1_id=:id_2 AND friend2_id=:id_1)';
-            $map = [
-               ':id_1'=>$id_1,
-               ':id_2'=>$id_2
-            ];
-            $friendship_id = $this->DB->select($this->table,$fields,$clause,$map); 
-            if ($friendship_id) {
+            try {
+                $friendship_id = $this->fetch_friendship_id($id_1,$id_2);
+                $clause = 'friendship_id=:id';
+                $map = [':id'=>$friendship_id];
                 $this->DB->delete($this->table,$clause,$map);
-                $event = 'friendship_deleted';
-                $data = [$id_1,$id_2];
-                $this->fire_event($event,$data);
-            } 
+                try {
+                    $event = 'friendship_deleted';
+                    $data = [$id_1,$id_2];
+                    $this->fire_event($event,$data);
+                } catch (\Exception $e) {
+                    echo 'Exception caught: '.$e->getMessage()."<br>";
+                }
+            } catch (\Exception $e) {
+                echo "Exception caught: friendship between users with user IDs $id_1 and $id_2 cannot be deleted as it does not exist"."<br>";
+            }
         }
 
         /**
@@ -162,8 +164,13 @@
                ':id_2'=>$id_2
             ];
             $outcome = $this->DB->select($this->table,$fields,$clause,$map);
-            $friendship_id = $outcome[0]['friendship_id'];
-            return $friendship_id;
+            if ($outcome) {
+                $friendship_id = $outcome[0]['friendship_id'];
+                return $friendship_id;
+            } else {
+                throw new \Exception("No friendship id can be fetched, as no friendship between users with user IDs $id_1 and $id_2 exist");
+            }
+            
         }
 
         /**
@@ -198,9 +205,48 @@
                     }
                     $n++;
                 }
-                return json_encode($friend_info);
+                return $friend_info;
             } else {
                 return 0;
+            }
+        }
+
+        public function fetch_specific_friends($user_id,$friendship_IDs) {
+            if ($friendship_IDs) {
+                $fields = ['*'];
+                $placeholders = [];
+                foreach ($friendship_IDs as $key => $value) {
+                    $placeholders[] = ':parameter'.$key;
+                }
+                $placeholders_string = implode(',',$placeholders);
+                $clause = 'friendship_id IN ('.$placeholders_string.')';
+                $map = [];
+                $n = 0;
+                foreach ($placeholders as $placeholder) {
+                    $map[$placeholder] = $friendship_IDs[$n];
+                    $n++;
+                }
+                $result = $this->DB->select($this->table,$fields,$clause,$map);
+                if ($result) {
+                    $friends = [];
+                    $n = 0;
+                    foreach ($result as $record) {
+                        $friends[$n]['friendship_id'] = $record['friendship_id'];
+                        if ($record['friend1_id']==$user_id) {
+                            $friends[$n]['friend_id'] = $record['friend2_id'];
+                            $friends[$n]['friend_name'] = $record['friend2_name'];
+                        } else {
+                            $friends[$n]['friend_id'] = $record['friend1_id'];
+                            $friends[$n]['friend_name'] = $record['friend1_name'];
+                        }
+                        $n++;
+                    }
+                    return $friends;
+                } else {
+                    throw new \Exception("No friendship records can be fetched for provided friendship IDs");     
+                }
+            } else {
+                throw new \Exception("No friendship_IDs provided");           
             }
         }
 
@@ -218,31 +264,31 @@
          * @param integer $friendship_id - Friendship id value greater which 
          * friendship connections are fetched. 
          *
-         * @return integer|string[] - Zero if user has no friendship connections
+         * @return integer|array - Zero if user has no friendship connections
          * with friendship id greater than the provided friendship id, otherwise 
-         * array of strings which contains information about all of these 
+         * array of arrays which contains information about all of these 
          * friendship connections, namely friendship id, friend user id and name. 
          */
         public function fetch_new_friends($user_id,$friendship_id) {
             $fields = ['*'];
             $clause = '(friend1_id=:u_id OR friend2_id=:u_id) AND friendship_id>:f_id';
             $map = [':u_id'=>$user_id,':f_id'=>$friendship_id];
-            $friends_raw = $this->DB->select($this->table,$fields,$clause,$map);
-            if ($friends_raw) {
-                $friends = [];
+            $new_friends_raw = $this->DB->select($this->table,$fields,$clause,$map);
+            if ($new_friends_raw) {
+                $new_friends = [];
                 $n = 0;
-                foreach ($friends_raw as $record) {
-                    $friends[$n]['friendship_id'] = $record['friendship_id'];
+                foreach ($new_friends_raw as $record) {
+                    $new_friends[$n]['friendship_id'] = $record['friendship_id'];
                     if ($record['friend1_id']==$user_id) {
-                        $friends[$n]['friend_id'] = $record['friend2_id'];
-                        $friends[$n]['friend_name'] = $record['friend2_name'];
+                        $new_friends[$n]['friend_id'] = $record['friend2_id'];
+                        $new_friends[$n]['friend_name'] = $record['friend2_name'];
                     } else {
-                        $friends[$n]['friend_id'] = $record['friend1_id'];
-                        $friends[$n]['friend_name'] = $record['friend1_name'];
+                        $new_friends[$n]['friend_id'] = $record['friend1_id'];
+                        $new_friends[$n]['friend_name'] = $record['friend1_name'];
                     }
                     $n++; 
                 }
-                return json_encode($friends);
+                return $new_friends;
             } else {
                 return 0;
             }
@@ -268,6 +314,107 @@
                 return $last_friendship_id;
             } else {
                 return 0;
+            }
+        }
+
+        public function fetch_friendship_IDs($user_id) {
+            $fields = ['friendship_id'];
+            $clause = 'friend1_id=:id OR friend2_id=:id';
+            $map = [':id'=>$user_id];
+            $result = $this->DB->select($this->table,$fields,$clause,$map);
+            if ($result) {
+                $friendship_IDs = [];
+                foreach ($result as $key => $value) {
+                      $friendship_IDs[] = $value['friendship_id'];
+                }  
+                return $friendship_IDs;
+            } else {
+                return 0;
+            }
+        }
+
+        public function fetch_friend_data($user_id,$friendship_IDs) {
+            $real_friendship_IDs = $this->fetch_friendship_IDs($user_id);
+            if ($real_friendship_IDs && $friendship_IDs) {
+                $friend_data = $this->process_friend_change($user_id,$friendship_IDs,$real_friendship_IDs);
+                return $friend_data;
+            } else {
+                $friend_data = $this->process_extreme_friend_change($user_id,$friendship_IDs,$real_friendship_IDs);
+                return $friend_data;
+            }
+        }
+
+        public function process_friend_change($user_id,$friendship_IDs,$real_friendship_IDs) {
+            $lost_friendship_IDs = array_values(array_diff($friendship_IDs,$real_friendship_IDs));
+            $obtained_friendship_IDs = array_values(array_diff($real_friendship_IDs,$friendship_IDs));
+            if ($lost_friendship_IDs && $obtained_friendship_IDs && $lost_friendship_IDs!=$friendship_IDs) {
+                try {
+                    $new_friends = $this->fetch_specific_friends($user_id,$obtained_friendship_IDs);
+                } catch (\Exception $e) {
+                    echo 'Exception caught: '.$e->getMessage();
+                    echo "<br>";
+                }
+                $friend_data = [
+                    'friends_obtained'=>'yes',
+                    'friends_lost'=>'yes',
+                    'lost_friendship_IDs'=>$lost_friendship_IDs,
+                    'new_friends'=>$new_friends,
+                    'friendship_IDs'=>$real_friendship_IDs
+                ];
+                return json_encode($friend_data);
+            } elseif ($lost_friendship_IDs && $obtained_friendship_IDs && $lost_friendship_IDs==$friendship_IDs) {
+                $new_friends = $this->fetch_all_friends($user_id);
+                $friend_data = [
+                    'friends_obtained'=>'all_new',
+                    'friends_lost'=>'all_lost',
+                    'lost_friendship_IDs'=>$lost_friendship_IDs,
+                    'new_friends'=>$new_friends,
+                    'friendship_IDs'=>$real_friendship_IDs
+                ];
+                return json_encode($friend_data);
+            } elseif (!$lost_friendship_IDs && $obtained_friendship_IDs) {
+                $new_friends = $this->fetch_specific_friends($user_id,$obtained_friendship_IDs);
+                $friend_data = [
+                    'friends_obtained'=>'yes',
+                    'friends_lost'=>'no',
+                    'lost_friendship_IDs'=>0,
+                    'new_friends'=>$new_friends,
+                    'friendship_IDs'=>$real_friendship_IDs
+                ];
+                return json_encode($friend_data);
+            } elseif ($lost_friendship_IDs && !$obtained_friendship_IDs) {
+                $friend_data = [
+                    'friends_obtained'=>'no',
+                    'friends_lost'=>'yes',
+                    'lost_friendship_IDs'=>$lost_friendship_IDs,
+                    'new_friends'=>0,
+                    'friendship_IDs'=>$real_friendship_IDs
+                ];
+                return json_encode($friend_data);
+            }
+        }
+
+        public function process_extreme_friend_change($user_id,$friendship_IDs,$real_friendship_IDs) {
+            if (!$real_friendship_IDs && $friendship_IDs) {
+                $friend_data = [
+                    'friends_obtained'=>'no',
+                    'friends_lost'=>'all_lost',
+                    'lost_friendship_IDs'=>$friendship_IDs,
+                    'new_friends'=>0,
+                    'friendship_IDs'=>0
+                ];
+                return json_encode($friend_data);
+            } elseif ($real_friendship_IDs && !$friendship_IDs) {
+                $last_friendship_id = 0;
+                $new_friends = $this->fetch_new_friends($user_id,$last_friendship_id);
+                $friend_data = [
+                    'friends_obtained'=>'all_new',
+                    'friends_lost'=>'no',
+                    'lost_friendship_IDs'=>0,
+                    'new_friends'=>$new_friends,
+                    'friendship_IDs'=>$real_friendship_IDs
+                ];
+                return json_encode($friend_data);
             }
         }
     	
