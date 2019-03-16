@@ -1,34 +1,59 @@
 function FriendsHandler() {
 
-	var lost_friends_IDs = [];
+	/*var lost_friends_IDs = [];
 
 	var lost_friends_names = [];
 
+	var lost_friends = [];
+
 	var blocked_names = [];
 
-	var unblocked_names = [];
+	var unblocked_names = [];*/
 
 	this.handle_friend_data = function(friend_data){
-		var type = typeof friend_data;
-		if (type==='object') {
-			var new_friends = friend_data;
-			var last_index = new_friends.length - 1;
-	        last_friendship_id = parseInt(new_friends[last_index].friendship_id);
-			new_friends.forEach(this.display_new_friend);
-			new_friends.forEach(this.update_friends);
-			this.announce_new_friends(new_friends);
-			new_friends.forEach(this.unblock_chat);
-			this.announce_unblocked_chats(new_friends);
-		} else {
-			last_friendship_id = parseInt(friend_data);
-			this.remove_friends(last_friendship_id);
-			this.announce_lost_friends();
-			lost_friends_IDs.forEach(this.block_chat);
-			this.announce_blocked_chats();
+		if (friend_data.friends_lost!='no' && friend_data.friends_obtained!='no') {
+			var h1 = new LostFriendsHandler();
+			var h2 = new NewFriendsHandler();
+			h1.handle_friend_data(friend_data);
+			h2.handle_friend_data(friend_data);
+		} else if (friend_data.friends_lost=='no' && friend_data.friends_obtained!='no') {
+			var h = new NewFriendsHandler();
+			h.handle_friend_data(friend_data);
+		} else if (friend_data.friends_lost!='no' && friend_data.friends_obtained=='no') {
+			var h = new LostFriendsHandler();
+			h.handle_friend_data(friend_data);
 		}
 	}
 
-	this.display_new_friend = function(new_friend){
+	/*this.handle_friend_data = function(friend_data){
+		if (friend_data.friends_lost=='all_lost') {
+			lost_friends = friends;
+			friendship_IDs = 0;
+			friends = 0;
+		} else if (friend_data.friends_obtained=='all_new' 
+			&& friend_data.friends_lost=='no') {
+			friendship_IDs = friend_data.friendship_IDs;
+			friends = friend_data.new_friends;
+			var new_friends = friends;
+			new_friends.forEach(this.display_new_friend);
+			this.announce_new_friends(new_friends);
+			new_friends.forEach(this.unblock_chat);
+			this.announce_unblocked_chats();
+		} else if (friend_data.friends_obtained=='all_new' 
+			&& friend_data.friends_lost=='all_lost') {
+			var lost_friendship_IDs = friend_data.lost_friendship_IDs;
+			lost_friends = friends;
+			this.remove_all_friends();
+			this.announce_lost_friends();
+			lost_friends_IDs.forEach(this.block_chat);
+			this.announce_blocked_chats();
+			friendship_IDs = friend_data.friendship_IDs;
+			friends = friend_data.new_friends;
+			var new_friends = friends;
+		}
+	}*/
+
+	/*this.display_new_friend = function(new_friend){
 		var id = parseInt(new_friend.friend_id);
 		if (chats) {
 			var partner_IDs = [];
@@ -94,7 +119,7 @@ function FriendsHandler() {
 		}
 	}
 
-	this.announce_unblocked_chats = function(new_friends){
+	this.announce_unblocked_chats = function(){
 		if (unblocked_names.length==1) {
 			alert('Chat with user '+unblocked_names[0]+' has been unlocked,'+
 			' now you can freely chat with user '+unblocked_names[0]+'!:)');
@@ -105,7 +130,24 @@ function FriendsHandler() {
 		}
 	}
 
-	this.remove_friends = function(last_friendship_id){
+	this.remove_all_friends = function(){
+		friends.forEach(function(friend){
+			lost_friends_names.push(friend.friend_name);
+			var id = parseInt(friend.friend_id);
+			lost_friends_IDs.push(id);
+			$('#f'+friend.friend_id).remove();
+		});
+		var text = $('<div style="text-align:center"></div>').
+        text(
+            'You have no friends. In Social Nano Network you\
+             can chat only with friends. Go to your profile page\
+             and add some friends'
+        );
+        $('#friend_caption').html(text);
+        friends = 0;
+	}
+
+	this.remove_friends = function(lost_friendship_IDs){
 		for (var i = 0; i < friends.length; i++) {
 			var friendship_id = parseInt(friends[i].friendship_id); 
 			if (friendship_id > last_friendship_id) {					
@@ -169,6 +211,6 @@ function FriendsHandler() {
 			 'to unlock these chats, you should add users '+blocked_names_string+
 			 ' to your friend list');
 		}
-	}
+	}*/
 
 }

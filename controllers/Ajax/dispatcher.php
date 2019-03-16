@@ -34,7 +34,7 @@
             'controller'=>'Ajax/friend_adder.php'
          ),
          array('method'=>'GET', 
-            'uri'=>'%ajax/[0-9]+/friends/[0-9]+%', 
+            'uri'=>'%ajax/[0-9]+/friends(\?.*)?%', 
             'controller'=>'Ajax/new_friends_giver.php'
          )
    );

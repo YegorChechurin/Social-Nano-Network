@@ -173,6 +173,7 @@ function MessagesHandler() {
                     last_mes_ts : Date.parse(message.ts)
                 };
                 chats.push(new_chat);
+                chat_partner_IDs.push(new_chat.partner_id);
                 update_friends(new_chat.partner_id);
             }
         } else {
@@ -185,12 +186,25 @@ function MessagesHandler() {
                 last_mes_ts : Date.parse(message.ts)
             };
             chats = [new_chat];
+            chat_partner_IDs.push(new_chat.partner_id);
             update_friends(new_chat.partner_id);
         }
 	}
 
     var update_friends = function(id) {
         $('#f'+id).remove();
+        var pattern = /id="f[0-9]+"/;
+        var content = $('#friends').html();
+        if (!pattern.exec(content)) {
+            var text = $('<div style="text-align:center"></div>').
+            text(
+                'You have chats with all of your\
+                 friends. If you would like to chat with some other\
+                 Social Nano Network users, you have to add them to your\
+                 friend list'
+            );
+            $('#friend_caption').html(text);
+        }
     }
 
 } 

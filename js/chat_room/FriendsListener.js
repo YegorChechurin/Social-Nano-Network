@@ -17,7 +17,8 @@ function FriendsListener() {
      * arrives. 
      */
 	this.listen_new_friends = function(){
-		$.get("http://localhost/SNN/ajax/"+user_id+"/friends/"+last_friendship_id, 
+        var info = JSON.stringify(friendship_IDs);
+		$.get("http://localhost/SNN/ajax/"+user_id+"/friends?IDs="+info,
             function(data, status){
                 if (data) {
                     var friend_data = JSON.parse(data);
@@ -29,7 +30,7 @@ function FriendsListener() {
                 		var l = new FriendsListener();
                 		l.listen_new_friends();
                 	}
-                    setTimeout(recursion,2000);
+                    setTimeout(recursion,5000);
                 }
             }
         );

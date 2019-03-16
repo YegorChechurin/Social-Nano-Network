@@ -16,5 +16,9 @@
     $friend_broker->attach_observer($messenger,'friendship_made');
     $friend_broker->make_friendship($user_id,$friend_id,$names['name1'],
     	$names['name2']);
-    $friendship_id = $friend_broker->fetch_friendship_id($user_id,$friend_id);
-    echo $friendship_id;
+    try {
+        $friendship_id = $friend_broker->fetch_friendship_id($user_id,$friend_id);
+        echo $friendship_id;
+    } catch (\Exception $e) {
+        echo 'Exception caught :'.$e->getMessage()."<br>";
+    }

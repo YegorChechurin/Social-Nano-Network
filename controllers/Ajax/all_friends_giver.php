@@ -9,4 +9,4 @@
     $db = new Database();
     $friend_broker = new FriendBroker($db);
     $friends = $friend_broker->fetch_all_friends($user_id);
-    echo $friends;
+    echo json_encode($friends);

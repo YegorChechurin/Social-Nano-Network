@@ -9,6 +9,8 @@
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsBarHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/FriendsHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/LostFriendsHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/NewFriendsHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/Broker.js"></script>
 	<link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/chat_room_style.css">
 </head>
@@ -104,6 +106,8 @@
      * @type {Object[]}
      */
     var friends;
+
+    var friendship_IDs = <?=json_encode($data['friendship_IDs'])?>; 
 
     /** 
      * Programming "send_button" so that it can send messages. Class "MessagesListener" is located in js/chat_room/MessagesListener.js 

@@ -104,6 +104,7 @@ class FriendBrokerTest extends TestCase {
         $actual_dataset = $this->conn->createDataset($this->tables);
         $expected_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/expectedDeleteFriendship.xml');
         $this->assertDataSetsEqual($expected_dataset,$actual_dataset);
+        $this->FB->delete_friendship(1,2);
     }
 
     public function testFetchFriendshipID() {
