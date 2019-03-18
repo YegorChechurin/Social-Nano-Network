@@ -108,8 +108,8 @@ function ChatsBarHandler(){
                     chats = JSON.parse(data);
                     if (chats) {
                         chats.forEach(convert_chat_last_mes_ts);
-                        var ts = chats[0].last_mes_ts;
-                        Cookies.set('last_mes_ts', ts, {expires:365});
+                        /*var ts = chats[0].last_mes_ts;
+                        Cookies.set('last_mes_ts', ts, {expires:365});*/
                         chats.forEach(function(chat){
                             chat_partner_IDs.push(chat.partner_id);
                         });
