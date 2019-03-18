@@ -25,7 +25,15 @@ function ChatsBarHandler(){
                                 block.click(function(){
                                     chat_partner_IDs.push(id);
                                     block.remove();
-                                    $("#mes").html('');
+                                    var nodes = $("#mes").children();
+                                    var pattern = /m[0-9]+/;
+                                    for (var i = 0; i < nodes.length; i++) {
+                                        if (pattern.exec(nodes[i].id)) {
+                                            $("#"+nodes[i].id).remove();
+                                        } else if (nodes[i].localName=='br') {
+                                            $(nodes[i]).remove();
+                                        }
+                                    }
                                     active_id = id;
                                     active_name = friend.friend_name;
                                     var chat = {
@@ -42,6 +50,7 @@ function ChatsBarHandler(){
                                     } else {
                                         chats = [chat];
                                     }
+                                    chat_partner_IDs.push(active_id);
                                     var pattern = /id="f[0-9]+"/;
                                     var content = $('#friends').html();
                                     if (!pattern.exec(content)) {
@@ -102,7 +111,9 @@ function ChatsBarHandler(){
      * 'chats_wrapper' element. 
      */
 	this.build_chats_bar = function(){
-		$.get("http://localhost/SNN/ajax/"+user_id+"/chats", 
+        $("#chats_wrapper").html('');
+        chats.forEach(form_chat_header);
+		/*$.get("http://localhost/SNN/ajax/"+user_id+"/chats", 
             function(data, status){
                 if (status=="success") {
                     chats = JSON.parse(data);
@@ -154,50 +165,8 @@ function ChatsBarHandler(){
                 }
                 get_friends();
             }
-        );
+        );*/
 	}
-    
-    /** 
-     * Rearranges chats bar. 
-     *
-     * Sorts chats array in descending (reverse) order based 
-     * on last message timestamp: chat with largest last
-     * message timestamp should be first and chat with the
-     * smallest should be the last. Rebuilds chats bar based
-     * on the sorted chats array. Updates and stores in 
-     * cookies information about timestamp of the very last 
-     * message (either sent or received) of all the chats. 
-     */
-    this.rearrange_chats_bar = function() {
-        var l = chats.length;
-        var stamp;
-        for (var i = 0; i < l; i++) {
-            for (var j = 1; j < (l-i); j++) {
-                if (chats[j-1].last_mes_ts<chats[j].last_mes_ts) {
-                    stamp = chats[j-1];
-                    chats[j-1] = chats[j];
-                    chats[j] = stamp;
-                }
-            }
-        }
-        $("#chats_wrapper").html('');
-        chats.forEach(form_chat_header);
-        var ts = chats[0].last_mes_ts;
-        Cookies.set('last_mes_ts', ts, {expires:365});
-    }
-    
-    /** 
-     * Converts timestamp of chat last message from MySQL
-     * string format into number of milliseconds since 
-     * January 1, 1970, 00:00:00 UTC. 
-     *
-     * @param {Object} chat - Chat object containing meta
-     * data about a particular chat.
-     */
-    var convert_chat_last_mes_ts = function(chat) {
-        var t = Date.parse(chat.last_mes_ts);
-        chat.last_mes_ts = t;
-    }
     
     /** 
      * Forms chat header.
