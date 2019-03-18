@@ -6,11 +6,11 @@ function ChatsHandler() {
                 if (status=="success") {
                     chats = JSON.parse(data);
                     if (chats) {
-                        chats.forEach(convert_chat_last_mes_ts);
-                        var ts = chats[0].last_mes_ts;
-                        Cookies.set('last_mes_ts', ts, {expires:365});
                         chats.forEach(function(chat){
                             chat_partner_IDs.push(chat.partner_id);
+                            var t = Date.parse(chat.last_mes_ts);
+                            chat.last_mes_ts = t;
+                            check_chat(chat.partner_id,chat.last_mes_ts);
                         });
                     }
                 }
