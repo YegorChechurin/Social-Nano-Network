@@ -28,7 +28,10 @@ class MessengerTest extends TestCase {
     }
 
     public function getDataSet() {
-        $fixture_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/MessengerFixture.xml');
+        $fixture_time = date("Y-m-d H:i:s");
+        $flat_fixture_dataset = $this->createFlatXMLDataSet(dirname(__FILE__).'/MessengerFixture.xml');
+        $fixture_dataset = new ReplacementDataSet($flat_fixture_dataset);
+        $fixture_dataset->addFullReplacement("##fixture_time##",$fixture_time);
         return $fixture_dataset;
     }
 

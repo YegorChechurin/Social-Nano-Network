@@ -79,18 +79,19 @@
     		$fields = [
     			'participant1_id','participant1_name','participant2_id',
     			'participant2_name','last_mes_auth_id','last_mes_auth_name',
-    			'last_mes_text','chat_key','blocked'
+    			'last_mes_text','last_mes_ts','chat_key','blocked'
     		];
     		$sender_id = $mes_info['sender_id'];
     	    $sender_name = $mes_info['sender_name'];
     	    $recipient_id = $mes_info['recipient_id'];
     	    $recipient_name = $mes_info['recipient_name'];
             $message = $mes_info['message'];
+            $last_mes_ts = date("Y-m-d H:i:s");
             $key = $sender_id + $recipient_id;
             $blocked = 'no';
             $values = [
             	$sender_id,$sender_name,$recipient_id,$recipient_name,
-            	$sender_id,$sender_name,$message,$key,$blocked
+            	$sender_id,$sender_name,$message,$last_mes_ts,$key,$blocked
             ];
             $this->DB->insert($table,$fields,$values);
     	}
@@ -106,12 +107,16 @@
     	 */
     	public function update_chat($mes_info) {
     		$table = 'chats';
-    		$fields = ['last_mes_auth_id','last_mes_auth_name','last_mes_text'];
+    		$fields = [
+                'last_mes_auth_id','last_mes_auth_name',
+                'last_mes_text','last_mes_ts'
+            ];
     		$clause = '(participant1_id=:sender_id AND participant2_id=:recipient_id) OR (participant1_id=:recipient_id AND participant2_id=:sender_id)';
     		$map = [
     			':last_mes_auth_id' => $mes_info['sender_id'],
     			':last_mes_auth_name' => $mes_info['sender_name'],
     			':last_mes_text' => $mes_info['message'],
+                ':last_mes_ts' => date("Y-m-d H:i:s"),
     			':sender_id' => $mes_info['sender_id'],
     			':recipient_id' => $mes_info['recipient_id']
     		];
