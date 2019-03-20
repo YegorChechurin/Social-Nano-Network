@@ -390,6 +390,7 @@ function ChatsBarHandler(){
         var saved_ts = Cookies.getJSON('last_mes_ts');
         if (ts>saved_ts) {
             register_unread(chat_partner_id);
+            Cookies.set('last_mes_ts', ts, {expires:365});
         }
     }
     
