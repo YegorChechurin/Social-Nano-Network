@@ -23,7 +23,6 @@ function ChatsBarHandler(){
                                 block.html('Start chatting with '+'<b>'+friend.friend_name+'</b>');
                                 $('#friends').prepend(block);
                                 block.click(function(){
-                                    chat_partner_IDs.push(id);
                                     block.remove();
                                     var nodes = $("#mes").children();
                                     var pattern = /m[0-9]+/;
@@ -112,7 +111,12 @@ function ChatsBarHandler(){
      */
 	this.build_chats_bar = function(){
         $("#chats_wrapper").html('');
-        chats.forEach(form_chat_header);
+        chats.forEach(function(chat){
+            var chat_header = form_chat_header();
+            append_chat_header(chat_header);
+        });
+        var h = new MessagesBarHandler();
+        h.display_chat();
 		/*$.get("http://localhost/SNN/ajax/"+user_id+"/chats", 
             function(data, status){
                 if (status=="success") {
@@ -183,12 +187,12 @@ function ChatsBarHandler(){
      */
 	var form_chat_header = function(chat){
         var id = 'c'+chat.partner_id; 
-        $("#chats_wrapper").append('<div id="'+id+'"></div>');
+        //$("#chats_wrapper").append('<div id="'+id+'"></div>');
         $("#"+id).html('<b class="text">'+chat.partner_name+'</b><br>'+
         chat.last_mes_auth_name+': '+chat.last_mes_text);
         if (chat.blocked=='no') {
             $("#"+id).click(function(){
-                display_chat(chat.partner_id,chat.partner_name);
+                display_chat(chat);
             });
             $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
             var parsed_id = parseInt(chat.partner_id);
@@ -221,7 +225,16 @@ function ChatsBarHandler(){
                 $('#hint'+chat.partner_id).css('display','none');
             });
         }
+        return $("#"+id);
 	}
+
+    var append_chat_header = function(chat_header){
+        $('#chats_wrapper').append(chat_header);
+    }
+
+    var prepend_chat_header = function(chat_header){
+        $('#chats_wrapper').prepend(chat_header);
+    }
     
     /** 
      * Displays chat on user screen.
@@ -241,176 +254,19 @@ function ChatsBarHandler(){
      * @param {number} partner_id - User id of chat partner.
      * @param {string} partner_name - Name of chat partner.
      */
-	/*var display_chat = function(partner_id,partner_name){
-		number_of_messages_displayed = 0;
-        active_id = partner_id;  
-        active_name = partner_name;
-        $.get("http://localhost/SNN/ajax/"+user_id+"/chat/"+partner_id, 
-            function(data, status){
-                if (status=="success") {
-                    $("#mes").html('');
-                    var messages = JSON.parse(data);
-                    messages.forEach(
-                        function(message) {
-                            number_of_messages_displayed++;
-                            if (message.sender_id == user_id) {
-                                var content = '<div class="message_outlet" id="m'
-                                + number_of_messages_displayed +
-                                '"><b>You:</b> '+message.message+'</div><br>';
-                                $("#mes").append(content);
-                            } else {
-                                var content = '<div class="message_inlet" id="m'
-                                + number_of_messages_displayed +
-                                '"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
-                                $("#mes").append(content);
-                            }
-                            var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
-                            if (last_mes_pos > mes_height) {
-                                document.getElementById("mes").scrollTop = last_mes_pos; 
-                            }
-                        }
-                    );
-                }
-            }
-        );
-        var id = parseInt(active_id);
-        register_read(id);
-        mark_chat_read(id);
-        chats.forEach(function(item){
-            if (item.partner_id==active_id) {
-                $("#c"+active_id).attr("class","active_chat_header text-truncate");
-            } else {
-                if (item.blocked=='no') {
-                    $("#c"+item.partner_id).attr("class","chat_header text-truncate");
-                    id = parseInt(item.partner_id);
-                    mark_chat(id);
-                } else {
-                    $("#c"+item.partner_id).attr("class","chat_header_blocked text-truncate");
-                }
-            }
-        });
-	}*/
 
-    var display_chat = function(partner_id,partner_name){
-        number_of_messages_displayed = 0;
-        $.get("http://localhost/SNN/ajax/"+user_id+"/chat/"+partner_id, 
-            function(data, status){
-                if (status=="success") {
-                    var nodes = $("#mes").children();
-                    var pattern = /m[0-9]+/;
-                    for (var i = 0; i < nodes.length; i++) {
-                        if (pattern.exec(nodes[i].id)) {
-                            $("#"+nodes[i].id).remove();
-                        } else if (nodes[i].localName=='br') {
-                            $(nodes[i]).remove();
-                        }
-                    }
-                    var messages = JSON.parse(data);
-                    messages.forEach(
-                        function(message) {
-                            number_of_messages_displayed++;
-                            if (message.sender_id == user_id) {
-                                var content = '<div class="message_outlet" id="m'
-                                + number_of_messages_displayed +
-                                '"><b>You:</b> '+message.message+'</div><br>';
-                                $("#mes").append(content);
-                            } else {
-                                var content = '<div class="message_inlet" id="m'
-                                + number_of_messages_displayed +
-                                '"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
-                                $("#mes").append(content);
-                            }
-                            var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
-                            if (last_mes_pos > mes_height) {
-                                document.getElementById("mes").scrollTop = last_mes_pos; 
-                            }
-                        }
-                    );
-                }
-            }
-        );
+    var display_chat = function(chat){
         if (active_id) {
             $("#c"+active_id).attr("class","chat_header text-truncate");
         }
-        $("#c"+partner_id).attr("class","active_chat_header text-truncate");
-        active_id = partner_id;  
-        active_name = partner_name;
-        var id = parseInt(active_id);
-        register_read(id);
+        $("#c"+chat.partner_id).attr("class","active_chat_header text-truncate");
+        var id = parseInt(chat.partner_id);
         mark_chat_read(id);
+        var h1 = new ChatsHandler();
+        h1.activate_chat(chat);
+        var h2 = new MessagesBarHandler();
+        h2.display_chat();
     }
-
-    /** 
-     * Checks whether chat has any unread messages.
-     *
-     * Compares timestamp of last message in the chat to the
-     * timestamp stored in cookies. If timestamp of the last
-     * message in the chat exceeds the one stored in cookies,
-     * it means that this particular chat contains unread 
-     * messages.
-     *
-     * @param {number} chat_partner_id - User id of chat 
-     * partner. 
-     * @param {number} ts - Timestamp of last message in 
-     * chat in format of number of milliseconds since 
-     * January 1, 1970, 00:00:00 UTC.
-     */
-	var check_chat = function(chat_partner_id,ts) {
-        var saved_ts = Cookies.getJSON('last_mes_ts');
-        if (ts>saved_ts) {
-            register_unread(chat_partner_id);
-        }
-    }
-    
-    /** 
-     * Registers chat as the one which does NOT contain any
-     * unread messages. 
-     *
-     * Array unread_chats is stored in cookies. It consists 
-     * of user id of those chat partners, chats with whom 
-     * contain unread messages. This array is read and if
-     * chat_partner_id is present in the array, it is removed
-     * from the array. 
-     *
-     * @param {number} chat_partner_id - User id of chat 
-     * partner. 
-     */
-	var register_read = function(chat_partner_id) {
-		var unread_chats = Cookies.getJSON('unread_chats');
-        if (unread_chats) {
-            var index = unread_chats.indexOf(chat_partner_id);
-            if (index>-1) {
-                unread_chats.splice(index, 1);
-                Cookies.set('unread_chats', unread_chats, {expires:365});
-            }
-        }
-	}
-    
-    /** 
-     * Registers chat as the one which does contain unread 
-     * messages. 
-     *
-     * Array unread_chats is stored in cookies. It consists 
-     * of user id of those chat partners, chats with whom 
-     * contain unread messages. This array is read and if
-     * chat_partner_id is not present in the array, it is 
-     * added to the array. 
-     *
-     * @param {number} chat_partner_id - User id of chat 
-     * partner. 
-     */
-	var register_unread = function(chat_partner_id){
-		var unread_chats = Cookies.getJSON('unread_chats');
-        if (unread_chats) {
-            var index = unread_chats.indexOf(chat_partner_id);
-            if (index==-1) {
-                unread_chats.push(chat_partner_id);
-                Cookies.set('unread_chats', unread_chats, {expires:365});
-            }
-        } else{
-        	Cookies.set('unread_chats', [chat_partner_id], {expires:365});
-        }
-	}
     
     /** 
      * Marks chat header as read or unread. 
