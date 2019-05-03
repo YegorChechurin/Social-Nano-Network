@@ -1,11 +1,21 @@
-function MessagesBarHandler() {
+function MessagesBarHandler(event_handler) {
 
-	this.display_chat(){
+	var mediator = event_handler;
+
+	this.display_chat = function(){
 		if (active_id && active_name && chat_partner_IDs.includes(active_id)) {
 	        $.get("http://localhost/SNN/ajax/"+user_id+"/chat/"+active_id, 
 	            function(data, status){
 	                if (status=="success") {
-	                    clear_messages_bar();
+	                    var nodes = $("#mes").children();
+				        var pattern = /m[0-9]+/;
+				        for (var i = 0; i < nodes.length; i++) {
+				            if (pattern.exec(nodes[i].id)) {
+				                $("#"+nodes[i].id).remove();
+				            } else if (nodes[i].localName=='br') {
+				                $(nodes[i]).remove();
+				            }
+				        }
 	                    number_of_messages_displayed = 0;
 	                    var messages = JSON.parse(data);
 	                    messages.forEach(
@@ -22,19 +32,21 @@ function MessagesBarHandler() {
 	                                '"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
 	                                $("#mes").append(content);
 	                            }
-	                            var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
-	                            if (last_mes_pos > mes_height) {
-	                                document.getElementById("mes").scrollTop = last_mes_pos; 
-	                            }
 	                        }
 	                    );
+	                    if (document.getElementById("m"+number_of_messages_displayed)) {
+							var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
+					        if (last_mes_pos > mes_height) {
+					            document.getElementById("mes").scrollTop = last_mes_pos; 
+					        }
+						}
 	                }
 	            }
 	        );
 		}
 	}
 
-	var clear_messages_bar = function(){
+	this.clear_messages_bar = function(){
 		var nodes = $("#mes").children();
         var pattern = /m[0-9]+/;
         for (var i = 0; i < nodes.length; i++) {
@@ -70,12 +82,16 @@ function MessagesBarHandler() {
                 '"><b>'+message.sender_name+':</b> '+message.message+'</div><br>';
                 $("#mes").append(content);
             }
-            var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
-            if (last_mes_pos > mes_height) {
-                document.getElementById("mes").scrollTop = last_mes_pos; 
-            }
         } 
 	}
 
+	this.scroll_message_bar = function(){
+		if (document.getElementById("m"+number_of_messages_displayed)) {
+			var last_mes_pos = document.getElementById("m"+number_of_messages_displayed).offsetTop;
+	        if (last_mes_pos > mes_height) {
+	            document.getElementById("mes").scrollTop = last_mes_pos; 
+	        }
+		}
+	}
 
 }

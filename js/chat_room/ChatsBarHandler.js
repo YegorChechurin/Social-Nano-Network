@@ -6,91 +6,9 @@
  * chats bar, and rearranging it, when user receives or sends
  * a new message.
  */
-function ChatsBarHandler(){
+function ChatsBarHandler(event_handler){
 
-    var get_friends = function(){
-        $.get("http://localhost/SNN/ajax/"+user_id+"/all_friends", 
-            function(data, status){
-                if (status=="success") {
-                    friends = JSON.parse(data);
-                    if (friends) {
-                        var counter = 0;
-                        friends.forEach(function(friend){
-                            var id = parseInt(friend.friend_id);
-                            if (!chat_partner_IDs.includes(id)) {
-                                counter++;
-                                var block = $('<div id="f'+id+'" class="friend"></div>');
-                                block.html('Start chatting with '+'<b>'+friend.friend_name+'</b>');
-                                $('#friends').prepend(block);
-                                block.click(function(){
-                                    block.remove();
-                                    var nodes = $("#mes").children();
-                                    var pattern = /m[0-9]+/;
-                                    for (var i = 0; i < nodes.length; i++) {
-                                        if (pattern.exec(nodes[i].id)) {
-                                            $("#"+nodes[i].id).remove();
-                                        } else if (nodes[i].localName=='br') {
-                                            $(nodes[i]).remove();
-                                        }
-                                    }
-                                    active_id = id;
-                                    active_name = friend.friend_name;
-                                    var chat = {
-                                        partner_id : active_id,
-                                        partner_name : active_name,
-                                        last_mes_auth_id : 0,
-                                        last_mes_auth_name : user_name,
-                                        last_mes_text : '',
-                                        last_mes_ts : 0,
-                                        blocked : 'no' 
-                                    };
-                                    if (chats) {
-                                        chats.splice(0,0,chat);
-                                    } else {
-                                        chats = [chat];
-                                    }
-                                    chat_partner_IDs.push(active_id);
-                                    var pattern = /id="f[0-9]+"/;
-                                    var content = $('#friends').html();
-                                    if (!pattern.exec(content)) {
-                                        var text = $('<div style="text-align:center"></div>').
-                                        text(
-                                            'You have chats with all of your\
-                                             friends. If you would like to chat with some other\
-                                             Social Nano Network users, you have to add them to your\
-                                             friend list'
-                                        );
-                                        $('#friend_caption').html(text);
-                                    }
-                                    $('#chats_wrapper').html('');
-                                    chats.forEach(form_chat_header);
-                                });
-                            }
-                        });
-                        if (counter==0) {
-                            var text = $('<div style="text-align:center"></div>').
-                            text(
-                                'You have chats with all of your\
-                                 friends. If you would like to chat with some other\
-                                 Social Nano Network users, you have to add them to your\
-                                 friend list'
-                            );
-                            $('#friend_caption').html(text);
-                            $('#friends').html('');
-                        }
-                    } else {
-                        var text = $('<div style="text-align:center"></div>').
-                        text(
-                            'You have no friends. In Social Nano Network you\
-                             can chat only with friends. Go to your profile page\
-                             and add some friends'
-                        );
-                        $('#friend_caption').html(text);
-                    }
-                }
-            }
-        );
-    }
+    var mediator = event_handler;
 
     /** 
      * Builds chats bar.
@@ -112,64 +30,10 @@ function ChatsBarHandler(){
 	this.build_chats_bar = function(){
         $("#chats_wrapper").html('');
         chats.forEach(function(chat){
-            var chat_header = form_chat_header();
-            append_chat_header(chat_header);
+            var $chat_header = form_chat_header(chat);
+            append_chat_header($chat_header);
         });
-        var h = new MessagesBarHandler();
-        h.display_chat();
-		/*$.get("http://localhost/SNN/ajax/"+user_id+"/chats", 
-            function(data, status){
-                if (status=="success") {
-                    chats = JSON.parse(data);
-                    if (chats) {
-                        chats.forEach(convert_chat_last_mes_ts);
-                        var ts = chats[0].last_mes_ts;
-                        Cookies.set('last_mes_ts', ts, {expires:365});
-                        chats.forEach(function(chat){
-                            chat_partner_IDs.push(chat.partner_id);
-                        });
-                        if (active_id && active_name) {
-                            if (!chat_partner_IDs.includes(active_id)) {
-                                var chat = {
-                                    partner_id : active_id,
-                                    partner_name : active_name,
-                                    last_mes_auth_id : 0,
-                                    last_mes_auth_name : user_name,
-                                    last_mes_text : '',
-                                    last_mes_ts : 0,
-                                    blocked : 'no' 
-                                };
-                                chats.splice(0,0,chat);
-                                chat_partner_IDs.push(active_id);
-                            } else {
-                                display_chat(active_id,active_name);
-                            }
-                        }
-                        chats.forEach(form_chat_header);
-                    } else {
-                        if (active_id && active_name) {
-                            var chat = {
-                                partner_id : active_id,
-                                partner_name : active_name,
-                                last_mes_auth_id : 0,
-                                last_mes_auth_name : user_name,
-                                last_mes_text : '',
-                                last_mes_ts : 0,
-                                blocked : 'no'  
-                            };
-                            chats = [chat];
-                            chat_partner_IDs.push(active_id);
-                            chats.forEach(form_chat_header);
-                        } else {
-                            var text = $('<div class="text" style="text-align:center;padding-top:5%"></div>').
-                            text('You have no chats');
-                            $('#chats_wrapper').html(text);
-                        }
-                    }
-                }
-                get_friends();
-            }
-        );*/
+        this.mark_chats_bar();
 	}
     
     /** 
@@ -185,48 +49,25 @@ function ChatsBarHandler(){
      * @param {Object} chat - Chat object containing meta
      * data about a particular chat.
      */
-	var form_chat_header = function(chat){
+    var form_chat_header = function(chat){
         var id = 'c'+chat.partner_id; 
-        //$("#chats_wrapper").append('<div id="'+id+'"></div>');
-        $("#"+id).html('<b class="text">'+chat.partner_name+'</b><br>'+
+        var $chat_header = $('<div id="'+id+'"></div>');
+        $chat_header.html('<b class="text">'+chat.partner_name+'</b><br>'+
         chat.last_mes_auth_name+': '+chat.last_mes_text);
         if (chat.blocked=='no') {
-            $("#"+id).click(function(){
+            $chat_header.click(function(){
                 display_chat(chat);
             });
-            $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
-            var parsed_id = parseInt(chat.partner_id);
-            if (chat.partner_id==active_id) {
-                $("#"+id).attr('class','active_chat_header text-truncate');
-                register_read(parsed_id);
-                mark_chat_read(parsed_id);
-            } else { 
-                $("#"+id).attr('class','chat_header text-truncate');
-                var ts = chat.last_mes_ts;
-                check_chat(parsed_id,ts);
-                mark_chat(parsed_id);
-            }
         } else {
-            $("#"+id).attr('class','chat_header_blocked text-truncate');
-            var blocked_div = $('<div id="lock'+chat.partner_id+'" class="lock"></div>');
+            $chat_header.attr('class','chat_header_blocked text-truncate');
+            var $blocked_div = $('<div id="lock'+chat.partner_id+'" class="lock"></div>');
             /*https://github.com/danklammer/bytesize-icons*/
-            var blocked_sign = $('<svg class="lock" viewBox="0 0 32 32" width="32" height="32"><use xlink:href="http://localhost/SNN/images/lock.svg#i-lock"></use></svg>');
-            blocked_div.append(blocked_sign);
-            $("#"+id).append(blocked_div);
-            var tooltip = $('<div id="hint'+chat.partner_id+'" class="hint"></div>').
-            text('Chat with user '+chat.partner_name+' is locked. In order to unlock it add user '+chat.partner_name+' to your friend list');
-            var height = document.getElementById(id).offsetTop;
-            var top = 1*height;
-            $("#mes").append(tooltip);
-            $("#"+id).hover(function(){
-                $('#hint'+chat.partner_id).css('top',top);
-                $('#hint'+chat.partner_id).css('display','inline-block');
-            }, function(){
-                $('#hint'+chat.partner_id).css('display','none');
-            });
+            var $blocked_sign = $('<svg class="lock" viewBox="0 0 32 32" width="32" height="32"><use xlink:href="http://localhost/SNN/images/lock.svg#i-lock"></use></svg>');
+            $blocked_div.append($blocked_sign);
+            $chat_header.append($blocked_div);
         }
-        return $("#"+id);
-	}
+        return $chat_header;
+    }
 
     var append_chat_header = function(chat_header){
         $('#chats_wrapper').append(chat_header);
@@ -234,6 +75,34 @@ function ChatsBarHandler(){
 
     var prepend_chat_header = function(chat_header){
         $('#chats_wrapper').prepend(chat_header);
+    }
+
+    this.mark_chats_bar = function(){
+        chats.forEach(function(chat){
+            $chat_header = $('#c'+chat.partner_id);
+            if (chat.blocked=='no') {
+                var parsed_chat_partner_id = parseInt(chat.partner_id);
+                if (chat.partner_id==active_id) {
+                    $chat_header.attr('class','active_chat_header text-truncate');
+                    mark_chat_read(parsed_chat_partner_id);
+                } else { 
+                    $chat_header.attr('class','chat_header text-truncate');
+                    mark_chat(parsed_chat_partner_id);
+                }
+            } else {
+                var $tooltip = $('<div id="hint'+chat.partner_id+'" class="hint"></div>').
+                text('Chat with user '+chat.partner_name+' is locked. In order to unlock it add user '+chat.partner_name+' to your friend list');
+                var height = document.getElementById('c'+chat.partner_id).offsetTop;
+                var top = 1*height;
+                $("#mes").append($tooltip);
+                $chat_header.hover(function(){
+                    $('#hint'+chat.partner_id).css('top',top);
+                    $('#hint'+chat.partner_id).css('display','inline-block');
+                }, function(){
+                    $('#hint'+chat.partner_id).css('display','none');
+                });
+            }
+        });
     }
     
     /** 
@@ -262,10 +131,8 @@ function ChatsBarHandler(){
         $("#c"+chat.partner_id).attr("class","active_chat_header text-truncate");
         var id = parseInt(chat.partner_id);
         mark_chat_read(id);
-        var h1 = new ChatsHandler();
-        h1.activate_chat(chat);
-        var h2 = new MessagesBarHandler();
-        h2.display_chat();
+        var event = new Event('chats','chat_header_clicked',chat);
+        mediator.process_event(event);
     }
     
     /** 
@@ -303,7 +170,7 @@ function ChatsBarHandler(){
      * partner. 
      */
 	var mark_chat_read = function(chat_partner_id){
-		$("#unread_c"+chat_partner_id).attr('class','invisible');
+        $("#unread_c"+chat_partner_id).remove();
 	} 
     
     /** 
@@ -313,7 +180,7 @@ function ChatsBarHandler(){
      * partner. 
      */
 	var mark_chat_unread = function(chat_partner_id){
-		$("#unread_c"+chat_partner_id).attr('class','visible');
+        $('#c'+chat_partner_id).append('<div id="unread_c'+chat_partner_id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
         $("#c"+chat_partner_id).attr('class','chat_header_unread text-truncate');
 	}
 
@@ -323,30 +190,14 @@ function ChatsBarHandler(){
         var id = 'c'+chat.partner_id; 
         $("#"+id).off('hover');
         $("#"+id).click(function(){
-            display_chat(chat.partner_id,chat.partner_name);
-        });
-        $("#"+id).append('<div id="unread_'+id+'" style="position:absolute; top:0; left:50%; color:red"><b>UNREAD</b></div>');
-        var parsed_id = parseInt(chat.partner_id);   
+            display_chat(chat);
+        });  
         $("#"+id).attr('class','chat_header text-truncate');
-        var ts = chat.last_mes_ts;
-        check_chat(parsed_id,ts);
+        var parsed_id = parseInt(chat.partner_id);
         mark_chat(parsed_id);
     }
 
     this.block_chat = function(chat){
-        if (chat.partner_id==active_id) {
-            active_id = 0;
-            active_name = '';
-            var nodes = $("#mes").children();
-            var pattern = /m[0-9]+/;
-            for (var i = 0; i < nodes.length; i++) {
-                if (pattern.exec(nodes[i].id)) {
-                    $("#"+nodes[i].id).remove();
-                } else if (nodes[i].localName=='br') {
-                    $(nodes[i]).remove();
-                }
-            }
-        }
         var id = 'c'+chat.partner_id; 
         $("#"+id).off('click');
         $("#unread_"+id).remove();

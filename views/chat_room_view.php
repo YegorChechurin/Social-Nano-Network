@@ -3,15 +3,20 @@
 <head>
     <title>Chats</title>
     <?php require '../views/setup.php' ?>
-    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/events_map.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesListener.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesBarHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/FriendsListener.js"></script>
-    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsBarHandler.js"></script>
-    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/MessagesHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/FriendsHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/LostFriendsHandler.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/chat_room/NewFriendsHandler.js"></script>
-    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/Broker.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/FriendsBarHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsBarHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/Mediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/ChatsMediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/FriendsMediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/PageLoadMediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/chat_room/Event.js"></script>
 	<link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/chat_room_style.css">
 </head>
 <body>
@@ -39,6 +44,8 @@
 </div>
 </body>
 <script type="text/javascript">
+    "use strict";
+
     /**
      * User id of a chat partner with whom the chat 
      * is displayed on screen now.
@@ -72,13 +79,6 @@
      */
     var last_rec_mes_id = <?=$data['last_rec_mes_id']?>; 
 
-    /**
-     * Friendship id of the most recently (last) 
-     * established user's friendship connection.
-     * @type {number}
-     */
-    var last_friendship_id = <?=$data['last_friendship_id']?>;
-
     /** 
      * Height of the HTML element with id "mes". It is the element where all the messages of a particular chat are displayed. We need to know its height in order to dispay messages in such a way so that "mes" scrolls when it becomes full and the last message is always displayed in the right place. 
      * @type {number}
@@ -109,16 +109,6 @@
 
     var friendship_IDs = <?=json_encode($data['friendship_IDs'])?>; 
 
-    /** 
-     * Programming "send_button" so that it can send messages. Class "MessagesListener" is located in js/chat_room/MessagesListener.js 
-     */
-    $("#send_button").click(
-        function(){
-            var l = new MessagesListener();
-            l.listen_sent_messages();
-        }
-    );
-
     $(document).ready(
         function(){
             /**
@@ -129,23 +119,16 @@
             var profile_link = '<a href="'+href+'">My profile page</a>';
             $('#profile_link').html(profile_link);
 
-            /** 
-             * Assembling chats bar located in "chats_wrapper" HTML element. Class "ChatsBarHandler" is located in js/chat_room/ChatsBarHandler.js 
-             */
-            var h = new ChatsBarHandler();
-            h.build_chats_bar();
+            var mediator = new Mediator();
+            var chats_mediator = new ChatsMediator(mediator);
+            mediator.attach_topic_mediator_pair('chats',chats_mediator);
+            var friends_mediator = new FriendsMediator(mediator);
+            mediator.attach_topic_mediator_pair('friends',friends_mediator);
+            var page_load_mediator = new PageLoadMediator(mediator);
+            mediator.attach_topic_mediator_pair('page_load',page_load_mediator);
 
-            /** 
-             * Starting a listener which will be sending AJAX requests for new incoming messages on a regular basis. 
-             */
-            var l = new MessagesListener();
-            l.listen_incoming_messages();
-
-            /** 
-             * Starting a listener which will be sending AJAX requests for new friends on a regular basis. 
-             */
-            var l = new FriendsListener();
-            l.listen_new_friends();
+            var event = new Event('page_load','page_loaded');
+            mediator.process_event(event);
         }
     );
 </script>
