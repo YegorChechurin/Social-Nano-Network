@@ -7,7 +7,10 @@
  * events when new incoming messages arrive or when user 
  * sends a new message.
  */
-function MessagesListener(){
+function MessagesListener(event_handler){
+
+    var mediator = event_handler;
+
     /** 
      * Listens for the incoming messages.
      *
@@ -20,14 +23,14 @@ function MessagesListener(){
 	this.listen_incoming_messages = function(){
 		$.get("http://localhost/SNN/ajax/"+user_id+"/messages/"+last_rec_mes_id, 
             function(data, status){
-                if (data) {
-                    var messages = JSON.parse(data);
-                    var event = 'incoming_messages';
-                    fire_event(event,messages);
-                }
                 if (status=='success') {
+                    if (data) {
+                        var messages = JSON.parse(data);
+                        var event = new Event('chats','messages_received',messages);
+                        mediator.process_event(event);
+                    }
                 	var recursion = function(){
-                		var l = new MessagesListener();
+                		var l = mediator.create_object(MessagesListener);
                 		l.listen_incoming_messages();
                 	}
                     setTimeout(recursion,1000);
@@ -61,24 +64,13 @@ function MessagesListener(){
                             "recipient_id":active_id,
                             "message":text
                         };
-                        var event = 'message_sent';
-                        fire_event(event,message);
+                        var event = new Event('chats','message_sent',message);
+                        mediator.process_event(event);
                     }
                 }
             );
         }
 	}
     
-    /** 
-     * Fires event.
-     *
-     * @param {string} event - Name of the event to be handled.
-     * @param {*} data - Data required to handle the event.   
-     */
-	var fire_event = function(event,data){
-		var broker = new Broker();
-        broker.invoke_handlers(event,data);
-	}
-
 }
 

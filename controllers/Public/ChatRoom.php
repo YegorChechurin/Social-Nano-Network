@@ -16,17 +16,10 @@
             $data['user_name'] = $user->showName();
             $messenger = $service_factory->make_service_instance('Messenger');
             $data['last_rec_mes_id'] = $messenger->fetch_id_of_last_received_message($data['user_id']);
+            $data['chats'] = $messenger->fetch_user_chats($data['user_id']);;
             $friend_broker = $service_factory->make_service_instance('FriendBroker');
             $data['last_friendship_id'] = $friend_broker->fetch_last_friendship_id($data['user_id']);
             $data['friendship_IDs'] = $friend_broker->fetch_friendship_IDs($data['user_id']);
-
-            /*if ($request->POST) {
-                $data['active_id'] = $request->POST['fr_id'];
-                $data['active_name'] = $request->POST['fr_name'];
-            } else {
-                $data['active_id'] = 0;
-                $data['active_name'] = '';
-            }*/
 
             if ($request->query_string) {
                 parse_str($request->query_string,$partner);

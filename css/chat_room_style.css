@@ -95,7 +95,7 @@
 #mes {
 	  padding-top: 5px;
 	  overflow: auto;
-	  /*background-color: #ccffcc;*/
+	  height: 100%;
 	  border-right: 1px solid #a3c2c2;
 	  border-bottom: 1px solid #a3c2c2;
 	  background-image: url(http://localhost/SNN/images/communication.jpg);
@@ -109,7 +109,7 @@
 @media only screen and (min-width: 600px) {
 	#sidebar {
 		  overflow: auto;
-	      /*background-color: #F8F8F8;*/
+	      height: 100%;
 	  	  border-bottom: 1px solid #a3c2c2;
         }
 }
