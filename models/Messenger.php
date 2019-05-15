@@ -135,7 +135,7 @@
     	public function fetch_chat_messages($id_1,$id_2) {
     		$table = 'messages';
     		$fields = ['*'];
-    		$clause = '(sender_id=:id_1 AND recipient_id=:id_2) OR (sender_id=:id_2 AND recipient_id=:id_1)';
+    		$clause = '(sender_id=:id_1 AND recipient_id=:id_2) OR (sender_id=:id_2 AND recipient_id=:id_1) ORDER BY message_id ASC';
     		$map = [':id_1'=>$id_1, ':id_2'=>$id_2];
     		$messages = $this->DB->select($table,$fields,$clause,$map);
     		return json_encode($messages);
