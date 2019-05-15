@@ -10,8 +10,12 @@ function PageLoadMediator(global_mediator) {
 			var chats_bar_handler = mediator.create_object(ChatsBarHandler);
 			var messages_bar_handler = mediator.create_object(MessagesBarHandler);
 			var friends_handler = mediator.create_object(FriendsHandler);
-			chats_bar_handler.build_chats_bar();
-			chats_bar_handler.mark_chats_bar();
+			if (chats) {
+				chats_bar_handler.build_chats_bar();
+				chats_bar_handler.mark_chats_bar();
+			} else {
+				chats_bar_handler.announce_no_chats();
+			}
 			messages_bar_handler.display_chat();
 			friends_handler.fetch_friends();
 		} else if (event.name=='friends_fetched') {

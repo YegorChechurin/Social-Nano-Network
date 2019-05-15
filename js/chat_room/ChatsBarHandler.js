@@ -10,6 +10,11 @@ function ChatsBarHandler(event_handler){
 
     var mediator = event_handler;
 
+    this.announce_no_chats = function(){
+        $("#chats_wrapper").
+        html('<div style="text-align:center" class="text">You have no chats yet</div>');
+    }
+
     /** 
      * Builds chats bar.
      *

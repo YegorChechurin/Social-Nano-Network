@@ -3,11 +3,22 @@
 <head>
     <title>Profile</title>
     <?php require '../views/setup.php' ?>
-    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/BarsBuilder.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/MessagesListener.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/profile_page/FriendsListener.js"></script>
     <script type="text/javascript" src="http://localhost/SNN/js/profile_page/FriendsHandler.js"></script>
-    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/Broker.js"></script>
-    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/events_map.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/LostFriendsHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/NewFriendsHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/FriendsBarHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/UsersHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/UsersBarHandler.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/Mediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/PageLoadMediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/FriendsMediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/ChatsMediator.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/Event.js"></script>
+    <!--<script type="text/javascript" src="http://localhost/SNN/js/profile_page/.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/.js"></script>
+    <script type="text/javascript" src="http://localhost/SNN/js/profile_page/.js"></script>-->
     <link rel="stylesheet" type="text/css" href="http://localhost/SNN/css/profile_page_style.css">
 </head>
 <body>
@@ -17,11 +28,15 @@
     	</div>
     	<div class="row" style="height: 90%;">
         	<div class="col-sm-6" id="friends_bar">
-                <h3 class="text">Your friends</h3>  
+                <div id="friend_caption">
+                    <h3 class="text">Your friends</h3>
+                </div>  
                 <div id="friends"></div> 
             </div>
         	<div class="col-sm-6" id="inventory">
-               <h3 class="text">Other users registered in Social Nano Network</h3>
+                <div id="user_caption">
+                    <h3 class="text">Other users registered in Social Nano Network</h3>
+                </div>
             </div>
     	</div>
 	</div>
@@ -39,11 +54,17 @@
      */
     var user_name = <?=json_encode($data['user_name'])?>;
 
-    var friends;
-
     var users;
 
-    var last_friendship_id = <?=$data['last_friendship_id']?>;
+    var friends;
+
+    var friends_IDs = [];
+
+    var friendship_IDs = <?=json_encode($data['friendship_IDs'])?>; 
+
+    var friends_bar_height = document.getElementById("friends_bar").offsetHeight;
+
+    var last_rec_mes_id = <?=$data['last_rec_mes_id']?>; 
 
     $(document).ready(
         function(){
@@ -55,14 +76,16 @@
             var profile_link = '<a href="'+href+'">MESSENGER</a>';
             $('#messenger_link').html(profile_link);
 
-            var h = new BarsBuilder();
-            h.build_bars();
+            var mediator = new Mediator();
+            var chats_mediator = new ChatsMediator(mediator);
+            mediator.attach_topic_mediator_pair('chats',chats_mediator);
+            var friends_mediator = new FriendsMediator(mediator);
+            mediator.attach_topic_mediator_pair('friends',friends_mediator);
+            var page_load_mediator = new PageLoadMediator(mediator);
+            mediator.attach_topic_mediator_pair('page_load',page_load_mediator);
 
-            /** 
-             * Starting a listener which will be sending AJAX requests for new friends on a regular basis. 
-             */
-            var l = new FriendsListener();
-            l.listen_new_friends();
+            var event = new Event('page_load','page_loaded');
+            mediator.process_event(event);
         }
     );
 </script>
