@@ -155,6 +155,7 @@ function ChatsBarHandler(event_handler){
      * partner. 
      */
 	var mark_chat = function(chat_partner_id){
+        console.log(chat_partner_id);
 		var unread_chats = Cookies.getJSON('unread_chats');
         if (unread_chats) {
             var index = unread_chats.indexOf(chat_partner_id);

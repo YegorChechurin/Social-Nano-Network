@@ -12,7 +12,6 @@ function PageLoadMediator(global_mediator) {
 			var friends_handler = mediator.create_object(FriendsHandler);
 			if (chats) {
 				chats_bar_handler.build_chats_bar();
-				chats_bar_handler.mark_chats_bar();
 			} else {
 				chats_bar_handler.announce_no_chats();
 			}
