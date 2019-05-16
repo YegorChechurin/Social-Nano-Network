@@ -60,7 +60,7 @@ function FriendsBarHandler(event_handler) {
     this.scroll_bar = function(friend_id){
         var last_mes_pos = document.getElementById("f"+friend_id).offsetTop;
         if (last_mes_pos > friends_bar_height) {
-            document.getElementById("friends_bar").scrollTop = last_mes_pos; 
+            document.getElementById("friends_bar").scrollTop = last_mes_pos+500; 
         }
     }
 

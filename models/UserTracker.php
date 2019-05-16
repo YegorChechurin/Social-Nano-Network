@@ -26,6 +26,15 @@
             $this->table = 'users';
     	}
 
+        public function fetch_user_name($user_id) {
+           $fields = ['username'];
+           $clause = 'user_id=:id';
+           $map = [':id'=>$user_id];
+           $result = $this->DB->select($this->table,$fields,$clause,$map);
+           $this->name = $result[0]['username'];
+           return $this->name;
+        }
+
     	public function register_new_user() {}
 
     	public function log_user_in() {}
