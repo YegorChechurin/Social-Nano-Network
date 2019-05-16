@@ -2,15 +2,17 @@
 
     use Controllers\Pub\ChatRoom;
     use Skeleton\Database\Database;
-    use Models\UserFactory;
-    use Models\ServiceFactory;
+    use Models\UserTracker;
+    use Models\Messenger;
+    use Models\FriendBroker;
 
     require_once 'view_map.php';
 
     $db = new Database();
-    $user_factory = new UserFactory($db);
-    $service_factory = new ServiceFactory($db);
-    $controller = new ChatRoom();
-    $data = $controller->get_view_data($user_factory,$service_factory);
+    $user_tracker = new UserTracker($db);
+    $messenger = new Messenger($db);
+    $friend_broker = new FriendBroker($db);
+    $controller = new ChatRoom($user_tracker,$messenger,$friend_broker);
+    $data = $controller->get_view_data();
     $controller->load_view($view_map,$data);
 
