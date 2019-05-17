@@ -2,13 +2,14 @@
 
     namespace Models;
     use Models\iObservable;
+    use Models\iChangeFetcher;
     use Skeleton\Database\Database;
 
     /**
      * A class which provides means for establishing and maintaining   
      * friendship connections in Social Nano Network. 
      */
-    class FriendBroker implements iObservable {
+    class FriendBroker implements iObservable, iChangeFetcher {
 
     	/**
     	 * @var Skeleton\Database\Database - Points to an instance of Database class
@@ -333,7 +334,7 @@
             }
         }
 
-        public function fetch_friend_data($user_id,$friendship_IDs) {
+        public function fetch_changes($user_id,$friendship_IDs) {
             $real_friendship_IDs = $this->fetch_friendship_IDs($user_id);
             if ($real_friendship_IDs && $friendship_IDs) {
                 $friend_data = $this->process_friend_change($user_id,$friendship_IDs,$real_friendship_IDs);

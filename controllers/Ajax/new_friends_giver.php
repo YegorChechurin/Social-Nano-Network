@@ -39,9 +39,8 @@
     $request = new Request();
     $db = new Database();
     $friend_broker = new FriendBroker($db);
-    $method = 'fetch_friend_data';
 
-    $friends_poll = new FriendsPoll($request,$friend_broker,$method);
+    $friends_poll = new FriendsPoll($request,$friend_broker);
     $friends_poll->get_query_parameter();
     $start = time();
     $finish = $start + 40;

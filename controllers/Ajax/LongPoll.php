@@ -2,6 +2,7 @@
 	
 	namespace Controllers\Ajax\LongPolling;
 	use Skeleton\RequestHandling\Request;
+	use Models\iChangeFetcher;
 
 	abstract class LongPoll {
 
@@ -15,18 +16,16 @@
 
 		protected $query_parameter;
 
-		public function __construct(Request $request, $service, $method) {
+		public function __construct(Request $request, iChangeFetcher $service) {
 			$this->request = $request;
 			$this->service = $service;
-			$this->method = $method;
 			$this->user_id = $this->request->uri[2];
 		}
 
 		abstract public function get_query_parameter();
 
 		public function poll($start,$finish,$sleeping_interval) {
-			$method = $this->method;
-			$data = $this->service->$method($this->user_id,$this->query_parameter);
+			$data = $this->service->fetch_changes($this->user_id,$this->query_parameter);
 	        if ($data) {
 	            echo $data;
 	        } else {
