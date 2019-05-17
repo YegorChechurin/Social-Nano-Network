@@ -1,6 +1,6 @@
 <?php 
 
-    use Skeleton\RequestHandling\Request;
+    /*use Skeleton\RequestHandling\Request;
     use Skeleton\Database\Database;
     use Models\FriendBroker;
 
@@ -29,4 +29,21 @@
     $db = new Database();
     $friend_broker = new FriendBroker($db);
     $ts = time();
-    long_polling($friend_broker,$user_id,$friendship_IDs,$ts);
+    long_polling($friend_broker,$user_id,$friendship_IDs,$ts);*/
+
+    use Controllers\Ajax\LongPolling\FriendsPoll;
+    use Skeleton\RequestHandling\Request;
+    use Skeleton\Database\Database;
+    use Models\FriendBroker;
+
+    $request = new Request();
+    $db = new Database();
+    $friend_broker = new FriendBroker($db);
+    $method = 'fetch_friend_data';
+
+    $friends_poll = new FriendsPoll($request,$friend_broker,$method);
+    $friends_poll->get_query_parameter();
+    $start = time();
+    $finish = $start + 40;
+    $sleeping_interval = 15;
+    $friends_poll->poll($start,$finish,$sleeping_interval);
