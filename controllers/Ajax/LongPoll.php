@@ -10,8 +10,6 @@
 
 		protected $service;
 
-		protected $method;
-
 		protected $user_id;
 
 		protected $query_parameter;
