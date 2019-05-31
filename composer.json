@@ -5,7 +5,7 @@
 			"Skeleton\\Database\\":"skeleton/Database/",
 			"Models\\":"models/",
 			"Controllers\\Pub\\":"controllers/Public/",
-			"Controllers\\Ajax\\LongPolling\\":"controllers/Ajax/"
+			"Controllers\\Ajax\\LongPolling\\":"controllers/Ajax/LongPolling/"
 		},
 		"files":["skeleton/Database/database_config.php"]		
 	},

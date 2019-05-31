@@ -3,7 +3,7 @@
    $endpoints = array(
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/messages/[0-9]+%', 
-            'controller'=>'Ajax/messages_giver.php'
+            'controller'=>'Ajax/LongPolling/messages_giver.php'
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/chats%', 
@@ -35,7 +35,7 @@
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/friends(\?.*)?%', 
-            'controller'=>'Ajax/new_friends_giver.php'
+            'controller'=>'Ajax/LongPolling/new_friends_giver.php'
          )
    );
 
