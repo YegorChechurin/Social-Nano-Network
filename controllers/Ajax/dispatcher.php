@@ -7,31 +7,31 @@
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/chats%', 
-            'controller'=>'Ajax/chats_giver.php'
+            'controller'=>'Ajax/ShortPolling/chats_giver.php'
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/chat/[0-9]+%', 
-            'controller'=>'Ajax/chat_fetcher.php'
+            'controller'=>'Ajax/ShortPolling/chat_fetcher.php'
          ),
          array('method'=>'POST', 
             'uri'=>'%ajax/[0-9]+/messages%', 
-            'controller'=>'Ajax/message_sender.php'
+            'controller'=>'Ajax/ShortPolling/message_sender.php'
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/all_friends%', 
-            'controller'=>'Ajax/all_friends_giver.php'
+            'controller'=>'Ajax/ShortPolling/all_friends_giver.php'
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/friend_removal/[0-9]+%', 
-            'controller'=>'Ajax/friend_remover.php'
+            'controller'=>'Ajax/ShortPolling/friend_remover.php'
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/all_users%', 
-            'controller'=>'Ajax/inventory_giver.php'
+            'controller'=>'Ajax/ShortPolling/inventory_giver.php'
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/friend_addition/[0-9]+(\?.*)?%', 
-            'controller'=>'Ajax/friend_adder.php'
+            'controller'=>'Ajax/ShortPolling/friend_adder.php'
          ),
          array('method'=>'GET', 
             'uri'=>'%ajax/[0-9]+/friends(\?.*)?%', 
