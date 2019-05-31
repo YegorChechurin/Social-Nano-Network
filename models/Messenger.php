@@ -2,13 +2,14 @@
 
     namespace Models;
     use Models\iObserver;
+    use Models\iChangeFetcher;
     use Skeleton\Database\Database;
 
     /**
      * A class which holds all the messaging and chatting functionality of the 
      * Social Nano Network.
      */
-    class Messenger implements iObserver {
+    class Messenger implements iObserver, iChangeFetcher {
 
     	/**
     	 * @var Skeleton\Database\Database - Points to an instance of Database class
@@ -189,7 +190,7 @@
     	 * @return string - JSON encoded array of messages which 
     	 * have been fetched.
     	 */
-    	public function fetch_received_messages($user_id,$message_id) {
+    	public function fetch_changes($user_id,$message_id) {
     		$table = 'messages';
     		$fields = ['*'];
     		$clause = 'recipient_id=:user_id AND message_id>:message_id ORDER BY message_id';
